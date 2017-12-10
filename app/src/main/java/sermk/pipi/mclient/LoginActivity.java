@@ -1,8 +1,5 @@
-package sermk.pipi.mailcontroller;
+package sermk.pipi.mclient;
 
-
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 
 import android.app.Activity;
 

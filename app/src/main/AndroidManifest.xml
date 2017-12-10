@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="sermk.pipi.mailcontroller">
+    package="sermk.pipi.mclient">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name="sermk.pipi.mclient.LoginActivity"
             android:label="@string/title_activity_login" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
         </activity>
 
         <service
-            android:name=".MCSService"
+            android:name="sermk.pipi.mclient.MCSService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

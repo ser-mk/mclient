@@ -1,4 +1,4 @@
-package sermk.pipi.mailcontroller;
+package sermk.pipi.mclient;
 
 import android.app.IntentService;
 import android.app.Notification;
