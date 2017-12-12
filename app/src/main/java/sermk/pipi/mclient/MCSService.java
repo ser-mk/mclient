@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
 
+import sermk.pipi.mclient.mailwork.AuthenticatorClient;
+import sermk.pipi.mclient.mailwork.Transmitter;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -82,18 +85,37 @@ public class MCSService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+            Log.v(TAG, "intent : " + intent.toString());
+            final String body = intent.getStringExtra(Intent.EXTRA_TEXT);
+            final String[] attachedFiles = intent.getStringArrayExtra(Intent.ACTION_ATTACH_DATA);
+            final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+            sendMessage(subject, body, attachedFiles);
+        } else {
+            Log.v(TAG, "intent null!");
+        }
+    }
+
+    private boolean sendMessage(final String subject, final String body, final String[] attachedFiles){
+        final AuthenticatorClient ac = new AuthenticatorClient();
+        Transmitter tr = new Transmitter(ac);
+        tr.setBody(body);
+        tr.set_subject(subject);
+        for (String names : attachedFiles) {
+            try {
+                tr.addAttachment(names);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+        try {
+            tr.send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     /**

@@ -4,11 +4,16 @@ package sermk.pipi.mclient;
 import android.app.Activity;
 
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,10 +23,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity {
+
+    final private String TAG = this.getClass().getName();
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -62,12 +73,90 @@ public class LoginActivity extends Activity {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                //attemptLogin();
+                test();
+            }
+        });
+
+        Button sendinfo = (Button) findViewById(R.id.sendInfo);
+        sendinfo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendInfo();
             }
         });
 
     }
 
+    private void sendInfo(){
+        Intent intent = new Intent(this, MCSService.class);
+        intent.putExtra(Intent.EXTRA_TEXT, "@@@@@");
+        final String[] fnames = {testFile("aaa"),testFile("bbb")};
+        intent.putExtra(Intent.ACTION_ATTACH_DATA,fnames);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "info");
+        ComponentName c = startService(intent);
+        if(c == null){
+            Log.v("!!", "fuckkk@ info!");
+        }
+        Log.v("!!","c = "  + c.toString());
+    }
+
+    private String testFile(final String filename){
+        //String filename = "test11.txt";
+        String string = "Hello world!";
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] fnames = this.fileList();
+        for (String str : fnames) {
+            Log.v(TAG,"name file: " + str);
+        }
+        File f = new File(getFilesDir(), filename);
+        if(f.exists()){
+            Log.v(TAG, "f.exists() " + f.getName() + " " + f.getAbsolutePath() );
+        } else {
+            Log.v(TAG, "f not!! exists()");
+        }
+
+        return f.getAbsolutePath();
+    }
+
+    private String testFile2(){
+        String filename = "test11.txt";
+        String string = "Hello world!";
+        File file = new File(filename);
+        try {
+            FileWriter fw = new FileWriter(file);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] fnames = this.fileList();
+        for (String str : fnames) {
+            Log.v(TAG,"name file: " + str);
+        }
+        return getFilesDir() + filename;
+    }
+
+
+    void test(){
+        //Intent intent = new Intent("sermk.pipi.mclient.MCSService");
+        Intent intent = new Intent();
+        intent.setClassName("sermk.pipi.mclient", "sermk.pipi.mclient.MCSService");
+        intent.putExtra("2131", "213");
+        Log.v("!!!!!! ", "sending1");
+        ComponentName c = startService(intent);
+        if(c == null){
+            Log.v("!!", "fuckkk@");
+        }
+        Log.v("!!!!!! ", "sending " + c.toString());
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.

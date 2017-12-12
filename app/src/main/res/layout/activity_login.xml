@@ -46,6 +46,18 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/sendInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="send info" />
+
+            <Button
+                android:id="@+id/readTest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="read from server" />
+
         </LinearLayout>
 
 </LinearLayout>

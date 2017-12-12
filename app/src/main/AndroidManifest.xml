@@ -31,11 +31,11 @@
         </activity>
 
         <service
-            android:name="sermk.pipi.mclient.MCSService"
+            android:name=".MCSService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name=".MCService"></action>
+                <action android:name=".MCSService"></action>
             </intent-filter>
         </service>
     </application>

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     defaultConfig {
-        applicationId "sermk.pipi.mailcontroller"
+        applicationId "sermk.pipi.mclient"
         minSdkVersion 24
         targetSdkVersion 25
         versionCode 1
