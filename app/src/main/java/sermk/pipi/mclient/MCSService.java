@@ -33,7 +33,7 @@ public class MCSService extends IntentService {
     }
 
     NotificationManager mNotificationManager;
-    final String TAG = "NotifyService";
+    final String TAG = "MCSService";
     private static final int NOTIFICATION = R.string.app_name;
 
     private void showNotification(final CharSequence text) {

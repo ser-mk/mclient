@@ -4,10 +4,10 @@ package sermk.pipi.mclient;
 import android.app.Activity;
 
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 
 
@@ -32,8 +32,6 @@ import java.io.FileWriter;
  */
 public class LoginActivity extends Activity {
 
-    final private String TAG = this.getClass().getName();
-
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -45,6 +43,7 @@ public class LoginActivity extends Activity {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private final String TAG = this.getClass().getName();
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -86,6 +85,25 @@ public class LoginActivity extends Activity {
             }
         });
 
+        Button readTest = (Button) findViewById(R.id.readTest);
+        readTest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                readTest();
+            }
+        });
+    }
+
+    private void readTest(){
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(MRService.class.getName().equals(service.service.getClassName())) {
+                Log.v(TAG, "service run");
+                return;
+            }
+        }
+        Log.v(TAG, "service stopped!!");
+        startService(new Intent(this, MRService.class));
     }
 
     private void sendInfo(){

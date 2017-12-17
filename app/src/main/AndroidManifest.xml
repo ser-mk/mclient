@@ -22,12 +22,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="sermk.pipi.mclient.LoginActivity"
-            android:label="@string/title_activity_login" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service
@@ -35,9 +36,13 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name=".MCSService"></action>
+                <action android:name=".MCSService" />
             </intent-filter>
         </service>
+        <service
+            android:name=".MRService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

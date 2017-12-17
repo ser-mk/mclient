@@ -12,7 +12,7 @@ import sermk.pipi.mclient.Settings;
 public final class AuthenticatorClient extends javax.mail.Authenticator {
 
     String  _user;
-    private String  _pass;
+    String  _pass;
 
     public AuthenticatorClient(String _user, String _pass) {
         this._user = _user;
