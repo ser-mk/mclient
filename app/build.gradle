@@ -24,6 +24,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-annotations:25.4.0'
-    compile 'com.sun.mail:android-mail:1.6.0-rc2'
-    compile 'com.sun.mail:android-activation:1.6.0-rc2'
+    compile 'com.sun.mail:android-mail:1.6.0'
+    compile 'com.sun.mail:android-activation:1.6.0'
 }
