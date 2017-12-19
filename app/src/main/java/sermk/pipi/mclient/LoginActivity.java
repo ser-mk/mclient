@@ -110,7 +110,7 @@ public class LoginActivity extends Activity {
         Intent intent = new Intent(this, MCSService.class);
         intent.putExtra(Intent.EXTRA_TEXT, "@@@@@");
         final String[] fnames = {testFile("aaa"),testFile("bbb")};
-        intent.putExtra(Intent.ACTION_ATTACH_DATA,fnames);
+        intent.putExtra(Intent.EXTRA_STREAM,fnames);
         intent.putExtra(Intent.EXTRA_SUBJECT, "info");
         ComponentName c = startService(intent);
         if(c == null){

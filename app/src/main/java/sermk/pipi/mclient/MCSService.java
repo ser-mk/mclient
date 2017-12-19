@@ -89,7 +89,7 @@ public class MCSService extends IntentService {
         if (intent != null) {
             Log.v(TAG, "intent : " + intent.toString());
             final String body = intent.getStringExtra(Intent.EXTRA_TEXT);
-            final String[] attachedFiles = intent.getStringArrayExtra(Intent.ACTION_ATTACH_DATA);
+            final String[] attachedFiles = intent.getStringArrayExtra(Intent.EXTRA_STREAM);
             final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
             sendMessage(subject, body, attachedFiles);
         } else {
