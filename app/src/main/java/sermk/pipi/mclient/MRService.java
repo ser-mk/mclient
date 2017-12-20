@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
 import sermk.pipi.mclient.mailwork.AuthenticatorClient;
+import sermk.pipi.mclient.mailwork.FilterMessage;
 import sermk.pipi.mclient.mailwork.ReceiverStruct;
 
 public class MRService extends Service implements Runnable {
@@ -43,7 +47,7 @@ public class MRService extends Service implements Runnable {
     public void onCreate() {
         super.onCreate();
         showNotification(TAG);
-        thread = new Thread(this,"reciver");
+        thread = new Thread(this,"reciver " + TAG);
         thread.start();
     }
 
@@ -58,13 +62,43 @@ public class MRService extends Service implements Runnable {
 
         while (true){
             ReceiverStruct rs = new ReceiverStruct(new AuthenticatorClient());
-            rs.fetch();
+            Message[] messages = rs.fetch();
+
+            FilterMessage fm = getFilterMessage();
+            for(Message msg: messages){
+                try {
+                    if(fm.checkMessage(msg) == false){
+                        continue;
+                    }
+                    Log.v(TAG, "read mesasge number " + String.valueOf(msg.getMessageNumber())
+                            + " from " + msg.getFrom()
+                            + " with subject " + msg.getSubject());
+                    ReceiverStruct.delete(msg);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            rs.release();
+
             try {
-                Thread.sleep(5000);
+                Thread.sleep(sleepMillis());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
     }
+
+    protected void succesConnection(boolean succes){
+
+    }
+
+    protected FilterMessage getFilterMessage(){
+        final String[] from = {Settings.MASTER_MAIL};
+        final String[] subject = {"test"};
+        return new FilterMessage(from, subject);
+    }
+
+    protected long sleepMillis(){ return 5000; }
 }
