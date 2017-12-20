@@ -41,7 +41,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".MBaseReceiveService"
+            android:name=".TestReceiveService"
             android:enabled="true"
             android:exported="false"></service>
     </application>

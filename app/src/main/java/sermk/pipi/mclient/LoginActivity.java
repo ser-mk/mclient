@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 
+import sermk.pipi.mclient.mailwork.MBaseReceiveService;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -100,16 +102,20 @@ public class LoginActivity extends Activity {
         });
     }
 
-    private void readTest(){
+    private void readTest1(){
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if(MBaseReceiveService.class.getName().equals(service.service.getClassName())) {
+            if(TestReceiveService.class.getName().equals(service.service.getClassName())) {
                 Log.v(TAG, "service run");
                 return;
             }
         }
         Log.v(TAG, "service stopped!!");
-        startService(new Intent(this, MBaseReceiveService.class));
+        startService(new Intent(this, TestReceiveService.class));
+    }
+
+    private void readTest(){
+        TestReceiveService.startTest(this);
     }
 
     private void sendInfo1(){

@@ -1,9 +1,11 @@
-package sermk.pipi.mclient;
+package sermk.pipi.mclient.mailwork;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -11,11 +13,15 @@ import android.util.Log;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import sermk.pipi.mclient.LoginActivity;
+import sermk.pipi.mclient.MSettings;
+import sermk.pipi.mclient.R;
+import sermk.pipi.mclient.TestReceiveService;
 import sermk.pipi.mclient.mailwork.AuthenticatorClient;
 import sermk.pipi.mclient.mailwork.FilterMessage;
 import sermk.pipi.mclient.mailwork.ReceiverStruct;
 
-public class MBaseReceiveService extends Service implements Runnable {
+public abstract class MBaseReceiveService extends Service implements Runnable {
 
     final private String TAG = this.getClass().getName();
 
@@ -94,11 +100,7 @@ public class MBaseReceiveService extends Service implements Runnable {
 
     }
 
-    protected FilterMessage getFilterMessage(){
-        final String[] from = {MSettings.MASTER_MAIL};
-        final String[] subject = {"test"};
-        return new FilterMessage(from, subject);
-    }
+    abstract  protected FilterMessage getFilterMessage();
 
     protected long sleepMillis(){ return 5000; }
 }
