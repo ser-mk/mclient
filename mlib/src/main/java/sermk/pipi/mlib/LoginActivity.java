@@ -121,7 +121,9 @@ public class LoginActivity extends Activity {
 
     private void sendInfo(){
         final String[] fnames = {testFile("aaa"),testFile("bbb")};
-        EventBus.getDefault().register(this);
+        if(EventBus.getDefault().isRegistered(this) == false) {
+            EventBus.getDefault().register(this);
+        }
         MTransmitterService.sendMessage(this, "info", "content", fnames);
     }
 
