@@ -1,4 +1,4 @@
-package sermk.pipi.mclient.mailwork;
+package sermk.pipi.mlib;
 
 import android.util.Log;
 
@@ -18,8 +18,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import sermk.pipi.mclient.MSettings;
 
 /**
  * Created by brandonjenniges on 11/6/15.

@@ -3,6 +3,8 @@ package sermk.pipi.mclient;
 import android.app.Application;
 import android.content.res.Configuration;
 
+import sermk.pipi.mlib.MSettings;
+
 /**
  * Created by echormonov on 20.12.17.
  */

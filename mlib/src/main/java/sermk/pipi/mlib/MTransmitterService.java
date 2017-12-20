@@ -1,4 +1,4 @@
-package sermk.pipi.mclient;
+package sermk.pipi.mlib;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -11,9 +11,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
-
-import sermk.pipi.mclient.mailwork.AuthenticatorClient;
-import sermk.pipi.mclient.mailwork.Transmitter;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

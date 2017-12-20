@@ -1,8 +1,6 @@
-package sermk.pipi.mclient.mailwork;
+package sermk.pipi.mlib;
 
 import javax.mail.PasswordAuthentication;
-
-import sermk.pipi.mclient.MSettings;
 
 /**
  * Created by echormonov on 11.12.17.

@@ -1,7 +1,6 @@
-package sermk.pipi.mclient;
+package sermk.pipi.mlib;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 /**

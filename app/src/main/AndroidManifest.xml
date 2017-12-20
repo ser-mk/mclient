@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".TestActivity"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +33,7 @@
         </activity>
 
         <service
-            android:name=".MTransmitterService"
+            android:name="sermk.pipi.mlib.MTransmitterService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

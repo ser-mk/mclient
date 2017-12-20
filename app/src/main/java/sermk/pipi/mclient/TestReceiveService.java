@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import sermk.pipi.mclient.mailwork.FilterMessage;
-import sermk.pipi.mclient.mailwork.MBaseReceiveService;
+import sermk.pipi.mlib.FilterMessage;
+import sermk.pipi.mlib.MBaseReceiveService;
+import sermk.pipi.mlib.MSettings;
 
 /**
  * Created by echormonov on 20.12.17.

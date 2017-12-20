@@ -1,4 +1,4 @@
-package sermk.pipi.mclient.mailwork;
+package sermk.pipi.mlib;
 
 import android.util.Log;
 
