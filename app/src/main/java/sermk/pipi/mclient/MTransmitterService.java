@@ -4,9 +4,13 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
+
+import org.greenrobot.eventbus.EventBus;
 
 import sermk.pipi.mclient.mailwork.AuthenticatorClient;
 import sermk.pipi.mclient.mailwork.Transmitter;
@@ -18,22 +22,18 @@ import sermk.pipi.mclient.mailwork.Transmitter;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class MCSService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "sermk.pipi.mailcontroller.action.FOO";
-    private static final String ACTION_BAZ = "sermk.pipi.mailcontroller.action.BAZ";
+public class MTransmitterService extends IntentService {
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "sermk.pipi.mailcontroller.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "sermk.pipi.mailcontroller.extra.PARAM2";
+    public enum TransmitResult{ SUCCES, FAILED };
 
-    public MCSService() {
-        super("MCSService");
+    //final private String TAG = this.getClass().getName();
+
+    public MTransmitterService() {
+        super("MTransmitterService");
     }
 
     NotificationManager mNotificationManager;
-    final String TAG = "MCSService";
+    final String TAG = "MTransmitterService";
     private static final int NOTIFICATION = R.string.app_name;
 
     private void showNotification(final CharSequence text) {
@@ -60,28 +60,24 @@ public class MCSService extends IntentService {
      * @see IntentService
      */
     // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, MCSService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
+    public static boolean sendMessage(Context context, @NonNull final String subject,
+                                      @NonNull final String content,
+                                      @NonNull final String[] attached_files) {
+        Intent intent = new Intent(context, MTransmitterService.class);
+        intent.putExtra(Intent.EXTRA_TEXT, content);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if(attached_files.length != 0) {
+            intent.putExtra(Intent.EXTRA_STREAM, attached_files);
+        }
+        ComponentName c = context.startService(intent);
+        if(c == null){
+            Log.w("sendMessage", "can not send(");
+            return false;
+        }
+        Log.v("sendMessage","send succes!");
+        return true;
     }
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, MCSService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -91,13 +87,14 @@ public class MCSService extends IntentService {
             final String body = intent.getStringExtra(Intent.EXTRA_TEXT);
             final String[] attachedFiles = intent.getStringArrayExtra(Intent.EXTRA_STREAM);
             final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-            sendMessage(subject, body, attachedFiles);
+            final TransmitResult ret = sendMessage(subject, body, attachedFiles);
+            EventBus.getDefault().post(ret);
         } else {
             Log.v(TAG, "intent null!");
         }
     }
 
-    private boolean sendMessage(final String subject, final String body, final String[] attachedFiles){
+    private TransmitResult sendMessage(final String subject, final String body, final String[] attachedFiles){
         final AuthenticatorClient ac = new AuthenticatorClient();
         Transmitter tr = new Transmitter(ac);
         tr.setBody(body);
@@ -113,26 +110,9 @@ public class MCSService extends IntentService {
             tr.send();
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return TransmitResult.FAILED;
         }
-        return true;
+        return TransmitResult.SUCCES;
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 }

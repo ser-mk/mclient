@@ -19,7 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import sermk.pipi.mclient.Settings;
+import sermk.pipi.mclient.MSettings;
 
 /**
  * Created by brandonjenniges on 11/6/15.
@@ -128,7 +128,7 @@ public class Transmitter {
     }
 
     private void setDefaultContent(){
-        final String[] addresses = {Settings.MASTER_MAIL};
+        final String[] addresses = {MSettings.MASTER_MAIL};
         set_to(addresses);
     }
 

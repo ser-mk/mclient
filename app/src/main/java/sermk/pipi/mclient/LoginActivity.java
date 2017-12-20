@@ -8,7 +8,6 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 
 
 import android.os.Bundle;
@@ -22,6 +21,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,7 +46,6 @@ public class LoginActivity extends Activity {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
     private final String TAG = this.getClass().getName();
 
     // UI references.
@@ -57,11 +60,15 @@ public class LoginActivity extends Activity {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        mEmailView.setText(MSettings.getInstance().getSelfMail());
+        mPasswordView.setText(MSettings.getInstance().getSelfPassword());
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    checkAndSaveMail();
                     return true;
                 }
                 return false;
@@ -72,8 +79,7 @@ public class LoginActivity extends Activity {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //attemptLogin();
-                test();
+                checkAndSaveMail();
             }
         });
 
@@ -97,17 +103,17 @@ public class LoginActivity extends Activity {
     private void readTest(){
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if(MRService.class.getName().equals(service.service.getClassName())) {
+            if(MBaseReceiveService.class.getName().equals(service.service.getClassName())) {
                 Log.v(TAG, "service run");
                 return;
             }
         }
         Log.v(TAG, "service stopped!!");
-        startService(new Intent(this, MRService.class));
+        startService(new Intent(this, MBaseReceiveService.class));
     }
 
-    private void sendInfo(){
-        Intent intent = new Intent(this, MCSService.class);
+    private void sendInfo1(){
+        Intent intent = new Intent(this, MTransmitterService.class);
         intent.putExtra(Intent.EXTRA_TEXT, "@@@@@");
         final String[] fnames = {testFile("aaa"),testFile("bbb")};
         intent.putExtra(Intent.EXTRA_STREAM,fnames);
@@ -117,6 +123,12 @@ public class LoginActivity extends Activity {
             Log.v("!!", "fuckkk@ info!");
         }
         Log.v("!!","c = "  + c.toString());
+    }
+
+    private void sendInfo(){
+        final String[] fnames = {testFile("aaa"),testFile("bbb")};
+        EventBus.getDefault().register(this);
+        MTransmitterService.sendMessage(this, "info", "content", fnames);
     }
 
     private String testFile(final String filename){
@@ -164,9 +176,9 @@ public class LoginActivity extends Activity {
 
 
     void test(){
-        //Intent intent = new Intent("sermk.pipi.mclient.MCSService");
+        //Intent intent = new Intent("sermk.pipi.mclient.MTransmitterService");
         Intent intent = new Intent();
-        intent.setClassName("sermk.pipi.mclient", "sermk.pipi.mclient.MCSService");
+        intent.setClassName("sermk.pipi.mclient", "sermk.pipi.mclient.MTransmitterService");
         intent.putExtra("2131", "213");
         Log.v("!!!!!! ", "sending1");
         ComponentName c = startService(intent);
@@ -181,18 +193,15 @@ public class LoginActivity extends Activity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
+    private void checkAndSaveMail() {
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -219,10 +228,17 @@ public class LoginActivity extends Activity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            return;
         }
+        MSettings.getInstance().setSelfMail(email);
+        MSettings.getInstance().setSelfPassword(password);
+        sendInfo();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MTransmitterService.TransmitResult result) {
+        Toast.makeText(this, "result send operation " + result, Toast.LENGTH_LONG).show();
+        EventBus.getDefault().unregister(this);
     }
 
     private boolean isEmailValid(String email) {
@@ -235,60 +251,5 @@ public class LoginActivity extends Activity {
         return password.length() > 4;
     }
 
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-        }
-    }
 }
 

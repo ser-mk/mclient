@@ -15,7 +15,7 @@ import sermk.pipi.mclient.mailwork.AuthenticatorClient;
 import sermk.pipi.mclient.mailwork.FilterMessage;
 import sermk.pipi.mclient.mailwork.ReceiverStruct;
 
-public class MRService extends Service implements Runnable {
+public class MBaseReceiveService extends Service implements Runnable {
 
     final private String TAG = this.getClass().getName();
 
@@ -95,7 +95,7 @@ public class MRService extends Service implements Runnable {
     }
 
     protected FilterMessage getFilterMessage(){
-        final String[] from = {Settings.MASTER_MAIL};
+        final String[] from = {MSettings.MASTER_MAIL};
         final String[] subject = {"test"};
         return new FilterMessage(from, subject);
     }

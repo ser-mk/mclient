@@ -1,9 +1,8 @@
 package sermk.pipi.mclient.mailwork;
 
-import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 
-import sermk.pipi.mclient.Settings;
+import sermk.pipi.mclient.MSettings;
 
 /**
  * Created by echormonov on 11.12.17.
@@ -20,8 +19,8 @@ public final class AuthenticatorClient extends javax.mail.Authenticator {
     }
 
     public AuthenticatorClient() {
-        this._user = Settings.getSelfMail();
-        this._pass = Settings.getSelfPassword();
+        this._user = MSettings.getInstance().getSelfMail();
+        this._pass = MSettings.getInstance().getSelfPassword();
     }
 
     @Override
