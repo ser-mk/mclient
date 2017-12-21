@@ -30,6 +30,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -237,9 +239,20 @@ public class LoginActivity extends Activity {
         EventBus.getDefault().unregister(this);
     }
 
-    private boolean isEmailValid(String email) {
+    private boolean isEmailValid(String emailAdd) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        if (emailAdd == null || emailAdd.length() == 0) {
+            return false;
+        }
+
+        String parttenString = "^[a-zA-Z0-9]+([\\_|\\-|\\.]?[a-zA-Z0-9])*\\@[a-zA-Z0-9]+([\\_|\\-|\\.]?[a-zA-Z0-9])*\\.[a-zA-Z]{2,3}$";
+
+
+        Pattern pattern = Pattern.compile(parttenString);
+        Matcher matcher = pattern.matcher(emailAdd);
+
+        return matcher.matches();
+        //return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {

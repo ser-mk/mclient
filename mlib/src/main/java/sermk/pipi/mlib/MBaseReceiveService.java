@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.io.IOException;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
@@ -61,6 +63,8 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
             ReceiverStruct rs = new ReceiverStruct(new AuthenticatorClient());
             Message[] messages = rs.fetch();
 
+            succesConnection(messages.length != 0);
+
             FilterMessage fm = getFilterMessage();
             for(Message msg: messages){
                 try {
@@ -68,15 +72,18 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                         continue;
                     }
                     Log.v(TAG, "read mesasge number " + String.valueOf(msg.getMessageNumber())
-                            + " from " + msg.getFrom()
-                            + " with subject " + msg.getSubject());
-                    ReceiverStruct.delete(msg);
+                            + " from " + msg.getFrom()[0].toString()
+                            + " with subject " + msg.getSubject()
+                            + " has attached " + ReceiverStruct.hasAttachments(msg));
+                    copyMessage(msg);
+                    ReceiverStruct.markDelete(msg);
+                    rs.release();
                 } catch (MessagingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-            rs.release();
 
             try {
                 Thread.sleep(sleepMillis());
@@ -84,6 +91,24 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    protected void copyMessage(Message msg){
+        try {
+            final String from = msg.getFrom()[0].toString();
+            final String content = msg.getContent().toString();
+            Log.v(TAG, "From " + from + " | Content " + content);
+            if(ReceiverStruct.hasAttachments(msg)){
+                Log.v(TAG, "ReceiverStruct.isContainAttachments " + ReceiverStruct.isContainAttachments(msg));
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void actionCopyMessage(){
 
     }
 

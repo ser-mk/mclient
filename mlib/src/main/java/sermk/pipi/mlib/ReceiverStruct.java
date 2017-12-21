@@ -5,14 +5,19 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.activation.DataSource;
+import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 /**
  * Created by echormonov on 12.12.17.
@@ -111,7 +116,7 @@ public final class ReceiverStruct {
         return 0;
     }
     */
-    public static void delete(Message msg) throws MessagingException {
+    public static void markDelete(Message msg) throws MessagingException {
         msg.setFlag(Flags.Flag.DELETED, true);
         System.out.println("Marked DELETE for message: " + msg.getMessageNumber());
     }
@@ -123,5 +128,50 @@ public final class ReceiverStruct {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Determine whether to include attachments
+     * @param part
+     * @return
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public static  boolean isContainAttachments(Part part){
+        boolean flag = false;
+        try
+        {
+            String contentType = part.getContentType();
+            if(part.isMimeType("multipart/*")){
+                // Multipart multipart = (Multipart) part.getContent();
+                DataSource source = new ByteArrayDataSource(part.getInputStream(), "multipart/*");
+                Multipart multipart = new MimeMultipart(source);
+                int count = multipart.getCount();
+                for(int i = 0;i < count;i++){
+                    BodyPart bodypart = multipart.getBodyPart(i);
+                    String disPosition = bodypart.getDisposition();
+                    if((disPosition != null)&&(disPosition.equals(Part.ATTACHMENT)||disPosition.equals(Part.INLINE))){
+                        flag = true;
+                    }else if(bodypart.isMimeType("multipart/*")){
+                        flag = isContainAttachments(bodypart);
+                    }else{
+                        String conType = bodypart.getContentType();
+                        if(conType.toLowerCase().indexOf("appliaction") != -1){
+                            flag = true;
+                        }
+                        if(conType.toLowerCase().indexOf("name") != -1){
+                            flag = true;
+                        }
+                    }
+                    if (flag) break;
+                }
+            }else if(part.isMimeType("message/rfc822")){
+                flag = isContainAttachments((Part) part.getContent());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flag;
     }
 }
