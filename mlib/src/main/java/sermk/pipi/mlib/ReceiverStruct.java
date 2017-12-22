@@ -233,6 +233,7 @@ public final class ReceiverStruct {
                 BodyPart  bodyPart = mp.getBodyPart(i);
                 String disposition = bodyPart.getDisposition();
                 InputStream stream = (InputStream) bodyPart.getInputStream();
+                /*
                 if((disposition != null)&&(disposition.equals(Part.ATTACHMENT)||disposition.equals(Part.INLINE))){
                     fileName = bodyPart.getFileName();
                     if(fileName != null){
@@ -251,6 +252,7 @@ public final class ReceiverStruct {
                     Log.v("saveAttachmentFile" , "multipart");
                     saveAttachmentFile(context, bodyPart);
                 }else{
+                */
                     Log.v("saveAttachmentFile" , "else");
                     fileName = bodyPart.getFileName();
                     if(fileName != null && fileName.toLowerCase().indexOf("gb2312") != -1){
@@ -258,7 +260,7 @@ public final class ReceiverStruct {
                         write2file(context, fileName, stream);
                         return fileName;
                         //attachmentModels.add(new AttachmentModel(fileName, bodyPart.getInputStream()));
-                    }
+                    //}
                 }
             }
 
