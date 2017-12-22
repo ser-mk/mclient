@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -94,7 +96,7 @@ public class MTransmitterService extends IntentService {
     private TransmitResult sendMessage(final String subject, final String body, final String[] attachedFiles){
         final AuthenticatorClient ac = new AuthenticatorClient();
         Transmitter tr = new Transmitter(ac);
-        tr.setBody(body);
+        tr.setBody(body + getVersionInfo());
         tr.set_subject(subject);
         for (String names : attachedFiles) {
             try {
@@ -110,6 +112,20 @@ public class MTransmitterService extends IntentService {
             return TransmitResult.FAILED;
         }
         return TransmitResult.SUCCES;
+    }
+
+    //get the current version number and name
+    private String getVersionInfo() {
+        String versionName = "error";
+        int versionCode = -1;
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
+            versionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "\r\n" + "app: " + getApplicationContext().getPackageName() + " version: " + versionName + " code: " + String.valueOf(versionCode);
     }
 
 }
