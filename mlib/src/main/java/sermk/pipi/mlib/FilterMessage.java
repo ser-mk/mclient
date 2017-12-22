@@ -36,6 +36,12 @@ public class FilterMessage {
         }
 
         final String subject = msg.getSubject();
+        if(subject == null){
+            return false;
+        }
+        if(subject.isEmpty()){
+            return false;
+        }
         if( Arrays.binarySearch(this.subjects, subject) < 0 ){
             return false;
         }
