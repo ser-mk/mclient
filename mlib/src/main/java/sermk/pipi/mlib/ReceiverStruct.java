@@ -1,8 +1,12 @@
 package sermk.pipi.mlib;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.activation.DataSource;
@@ -16,7 +20,9 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 
 /**
@@ -173,5 +179,107 @@ public final class ReceiverStruct {
         }
 
         return flag;
+    }
+
+
+
+    public static  String getText(Part p) throws MessagingException, IOException {
+        if (p.isMimeType("text/*")) {
+            String s = (String)p.getContent();
+            final boolean textIsHtml = p.isMimeType("text/html");
+            if(textIsHtml){
+                return "!html!" + s;
+            }
+            return s;
+        }
+
+        if (p.isMimeType("multipart/alternative")) {
+            // prefer html text over plain text
+            Multipart mp = (Multipart)p.getContent();
+            String text = null;
+            for (int i = 0; i < mp.getCount(); i++) {
+                Part bp = mp.getBodyPart(i);
+                if (bp.isMimeType("text/plain")) {
+                    if (text == null)
+                        text = getText(bp);
+                    continue;
+                } else if (bp.isMimeType("text/html")) {
+                    String s = getText(bp);
+                    if (s != null)
+                        return s;
+                } else {
+                    return getText(bp);
+                }
+            }
+            return text;
+        } else if (p.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)p.getContent();
+            for (int i = 0; i < mp.getCount(); i++) {
+                String s = getText(mp.getBodyPart(i));
+                if (s != null)
+                    return s;
+            }
+        }
+
+        return "!empty!";
+    }
+
+    public static String saveAttachmentFile(Context context, Part part) throws MessagingException, IOException{
+        String fileName = "" ;
+        if(part.isMimeType("multipart/*")){
+            DataSource source = new ByteArrayDataSource(part.getInputStream(), "multipart/*");
+            Multipart mp = new MimeMultipart(source);
+            for(int i = 0;i < mp.getCount(); i++){
+                BodyPart  bodyPart = mp.getBodyPart(i);
+                String disposition = bodyPart.getDisposition();
+                InputStream stream = (InputStream) bodyPart.getInputStream();
+                if((disposition != null)&&(disposition.equals(Part.ATTACHMENT)||disposition.equals(Part.INLINE))){
+                    fileName = bodyPart.getFileName();
+                    if(fileName != null){
+                        Log.v("saveAttachmentFile" ,
+                                "first " + fileName);
+                        if (fileName.toLowerCase().indexOf("gb2312") != -1){
+                            fileName = MimeUtility.decodeText(fileName);
+                        }
+
+                        write2file(context, fileName, stream);
+                        return fileName;
+                        //attachmentModels.add(new AttachmentModel(fileName, bodyPart.getInputStream()));
+                    }
+
+                }else if(bodyPart.isMimeType("multipart/*")){
+                    Log.v("saveAttachmentFile" , "multipart");
+                    saveAttachmentFile(context, bodyPart);
+                }else{
+                    Log.v("saveAttachmentFile" , "else");
+                    fileName = bodyPart.getFileName();
+                    if(fileName != null && fileName.toLowerCase().indexOf("gb2312") != -1){
+                        fileName = MimeUtility.decodeText(fileName);
+                        write2file(context, fileName, stream);
+                        return fileName;
+                        //attachmentModels.add(new AttachmentModel(fileName, bodyPart.getInputStream()));
+                    }
+                }
+            }
+
+        }else if(part.isMimeType("message/rfc822")){
+            saveAttachmentFile(context,(Part) part.getContent());
+        }
+
+        return fileName;
+    }
+
+    private static void write2file(Context context,
+                                     String filename,
+                                     InputStream input ) throws IOException {
+        FileOutputStream output = context.openFileOutput(filename, Context.MODE_PRIVATE);
+        byte[] buffer = new byte[4096];
+
+        int byteRead;
+
+        while ((byteRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, byteRead);
+        }
+        output.close();
     }
 }

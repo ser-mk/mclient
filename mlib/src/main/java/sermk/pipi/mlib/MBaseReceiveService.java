@@ -99,9 +99,14 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
             final String content = msg.getContent().toString();
             Log.v(TAG, "From " + from + " | Content " + content);
             if(ReceiverStruct.hasAttachments(msg)){
-                Log.v(TAG, "ReceiverStruct.isContainAttachments " + ReceiverStruct.isContainAttachments(msg));
+                final String fielname = ReceiverStruct.saveAttachmentFile(this,msg);
+                Log.v(TAG, "ReceiverStruct.isContainAttachments "
+                        + ReceiverStruct.isContainAttachments(msg)
+                        + fielname);
+
             }
 
+            Log.v(TAG, "text : " + ReceiverStruct.getText(msg));
 
         } catch (Exception e) {
             e.printStackTrace();
