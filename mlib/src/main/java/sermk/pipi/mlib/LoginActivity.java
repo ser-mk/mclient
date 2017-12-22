@@ -4,7 +4,6 @@ package sermk.pipi.mlib;
 import android.app.Activity;
 
 
-import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -126,7 +125,7 @@ public class LoginActivity extends Activity {
         if(EventBus.getDefault().isRegistered(this) == false) {
             EventBus.getDefault().register(this);
         }
-        MTransmitterService.sendMessage(this, "info", "content", fnames);
+        MTransmitterService.sendMessageAndAttachedFiles(this, "info", "content", fnames);
     }
 
     private String testFile(final String filename){

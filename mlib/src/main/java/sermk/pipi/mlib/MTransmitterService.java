@@ -52,6 +52,11 @@ public class MTransmitterService extends IntentService {
         mNotificationManager.notify(NOTIFICATION, notification);
     }
 
+    public static boolean sendMessageText(Context context, @NonNull final String subject,
+                                                      @NonNull final String content){
+        return sendMessageAndAttachedFiles(context, subject, content, new String[0]);
+    }
+
     /**
      * Starts this service to perform action Foo with the given parameters. If
      * the service is already performing a task this action will be queued.
@@ -59,21 +64,21 @@ public class MTransmitterService extends IntentService {
      * @see IntentService
      */
     // TODO: Customize helper method
-    public static boolean sendMessage(Context context, @NonNull final String subject,
-                                      @NonNull final String content,
-                                      @NonNull final String[] attached_files) {
+    public static boolean sendMessageAndAttachedFiles(Context context, @NonNull final String subject,
+                                                      @NonNull final String content,
+                                                      @NonNull final String[] attached_files) {
         Intent intent = new Intent(context, MTransmitterService.class);
         intent.putExtra(Intent.EXTRA_TEXT, content);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        if(attached_files.length != 0) {
+        //if(attached_files.length != 0) {
             intent.putExtra(Intent.EXTRA_STREAM, attached_files);
-        }
+        //}
         ComponentName c = context.startService(intent);
         if(c == null){
-            Log.w("sendMessage", "can not send(");
+            Log.w("sendMessageAndAttachedFiles", "can not send(");
             return false;
         }
-        Log.v("sendMessage","send succes!");
+        Log.v("sendMessageAndAttachedFiles","send succes!");
         return true;
     }
 
@@ -86,14 +91,14 @@ public class MTransmitterService extends IntentService {
             final String body = intent.getStringExtra(Intent.EXTRA_TEXT);
             final String[] attachedFiles = intent.getStringArrayExtra(Intent.EXTRA_STREAM);
             final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-            final TransmitResult ret = sendMessage(subject, body, attachedFiles);
+            final TransmitResult ret = sendMessageAndAttachedFiles(subject, body, attachedFiles);
             EventBus.getDefault().post(ret);
         } else {
             Log.v(TAG, "intent null!");
         }
     }
 
-    private TransmitResult sendMessage(final String subject, final String body, final String[] attachedFiles){
+    private TransmitResult sendMessageAndAttachedFiles(final String subject, final String body, final String[] attachedFiles){
         final AuthenticatorClient ac = new AuthenticatorClient();
         Transmitter tr = new Transmitter(ac);
         tr.setBody(body + getVersionInfo());

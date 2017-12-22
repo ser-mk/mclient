@@ -66,6 +66,7 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
             succesConnection(messages.length != 0);
 
             FilterMessage fm = getFilterMessage();
+            MessageCopy mc = new MessageCopy();
             for(Message msg: messages){
                 try {
                     if(fm.checkMessage(msg) == false){
@@ -75,15 +76,19 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                             + " from " + msg.getFrom()[0].toString()
                             + " with subject " + msg.getSubject()
                             + " has attached " + ReceiverStruct.hasAttachments(msg));
-                    copyMessage(msg);
-                    ReceiverStruct.markDelete(msg);
+                    mc = copyMessage(msg);
+                    //todo: replace
+                    //ReceiverStruct.markDelete(msg);
                     rs.release();
+                    break;
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+
+            actionCopyMessage(mc);
 
             try {
                 Thread.sleep(sleepMillis());
@@ -93,17 +98,20 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
         }
     }
 
-    protected void copyMessage(Message msg){
+    public static class MessageCopy {
+        public String subj = "";
+        public String content = "";
+        public String filename = "";
+    }
+
+    abstract  protected MessageCopy copyMessage(Message msg);/*{
         try {
             final String from = msg.getFrom()[0].toString();
             final String content = msg.getContent().toString();
             Log.v(TAG, "From " + from + " | Content " + content);
             if(ReceiverStruct.hasAttachments(msg)){
-                final String fielname = ReceiverStruct.saveAttachmentFile(this,msg);
-                Log.v(TAG, "ReceiverStruct.isContainAttachments "
-                        + ReceiverStruct.isContainAttachments(msg)
-                        + fielname);
-
+                final String filename = ReceiverStruct.saveAttachmentFile(this,msg);
+                Log.v(TAG, "Receiver filename " + filename);
             }
 
             Log.v(TAG, "text : " + ReceiverStruct.getText(msg));
@@ -112,10 +120,8 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
             e.printStackTrace();
         }
     }
-
-    protected void actionCopyMessage(){
-
-    }
+*/
+    abstract protected boolean actionCopyMessage(final MessageCopy mc);
 
     protected void succesConnection(boolean succes){
 

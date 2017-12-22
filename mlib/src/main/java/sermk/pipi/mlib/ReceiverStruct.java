@@ -3,6 +3,7 @@ package sermk.pipi.mlib;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -143,6 +144,7 @@ public final class ReceiverStruct {
      * @throws MessagingException
      * @throws IOException
      */
+    /*
     public static  boolean isContainAttachments(Part part){
         boolean flag = false;
         try
@@ -181,7 +183,7 @@ public final class ReceiverStruct {
         return flag;
     }
 
-
+*/
 
     public static  String getText(Part p) throws MessagingException, IOException {
         if (p.isMimeType("text/*")) {
@@ -233,7 +235,7 @@ public final class ReceiverStruct {
                 BodyPart  bodyPart = mp.getBodyPart(i);
                 String disposition = bodyPart.getDisposition();
                 InputStream stream = (InputStream) bodyPart.getInputStream();
-                /*
+
                 if((disposition != null)&&(disposition.equals(Part.ATTACHMENT)||disposition.equals(Part.INLINE))){
                     fileName = bodyPart.getFileName();
                     if(fileName != null){
@@ -243,8 +245,8 @@ public final class ReceiverStruct {
                             fileName = MimeUtility.decodeText(fileName);
                         }
 
-                        write2file(context, fileName, stream);
-                        return fileName;
+                        return write2file(context, fileName, stream);
+                        //return fileName;
                         //attachmentModels.add(new AttachmentModel(fileName, bodyPart.getInputStream()));
                     }
 
@@ -252,15 +254,13 @@ public final class ReceiverStruct {
                     Log.v("saveAttachmentFile" , "multipart");
                     saveAttachmentFile(context, bodyPart);
                 }else{
-                */
-                    Log.v("saveAttachmentFile" , "else");
                     fileName = bodyPart.getFileName();
                     if(fileName != null && fileName.toLowerCase().indexOf("gb2312") != -1){
                         fileName = MimeUtility.decodeText(fileName);
-                        write2file(context, fileName, stream);
-                        return fileName;
+                        return write2file(context, fileName, stream);
+                        //return fileName;
                         //attachmentModels.add(new AttachmentModel(fileName, bodyPart.getInputStream()));
-                    //}
+                    }
                 }
             }
 
@@ -271,10 +271,11 @@ public final class ReceiverStruct {
         return fileName;
     }
 
-    private static void write2file(Context context,
-                                     String filename,
+    private static String write2file(Context context,
+                                     String fileName,
                                      InputStream input ) throws IOException {
-        FileOutputStream output = context.openFileOutput(filename, Context.MODE_PRIVATE);
+        fileName = context.getFilesDir() + "/" + fileName;
+        FileOutputStream output = new FileOutputStream(fileName);//context.openFileOutput(filename, Context.MODE_PRIVATE);
         byte[] buffer = new byte[4096];
 
         int byteRead;
@@ -283,5 +284,7 @@ public final class ReceiverStruct {
             output.write(buffer, 0, byteRead);
         }
         output.close();
+
+        return fileName;
     }
 }
