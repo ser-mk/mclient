@@ -125,7 +125,8 @@ public class LoginActivity extends Activity {
         if(EventBus.getDefault().isRegistered(this) == false) {
             EventBus.getDefault().register(this);
         }
-        MTransmitterService.sendMessageAndAttachedFiles(this, "info", "content", fnames);
+        //MTransmitterService.sendMessageAndAttachedFiles(this, "info", "content", fnames);
+        MTransmitterService.sendMessageAndAttachedByteArray(this, "info", fnames[0]);
     }
 
     private String testFile(final String filename){
@@ -136,7 +137,7 @@ public class LoginActivity extends Activity {
         try {
             outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
             outputStream.write(string.getBytes());
-            outputStream.close();
+            outputStream.write(string.getBytes());
         } catch (Exception e) {
             e.printStackTrace();
         }

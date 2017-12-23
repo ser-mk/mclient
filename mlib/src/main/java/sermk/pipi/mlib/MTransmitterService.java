@@ -14,6 +14,13 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static sermk.pipi.mlib.MUtils.getByteOfFile;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -70,15 +77,29 @@ public class MTransmitterService extends IntentService {
         Intent intent = new Intent(context, MTransmitterService.class);
         intent.putExtra(Intent.EXTRA_TEXT, content);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        //if(attached_files.length != 0) {
-            intent.putExtra(Intent.EXTRA_STREAM, attached_files);
-        //}
+        intent.putExtra(Intent.EXTRA_STREAM, attached_files);
         ComponentName c = context.startService(intent);
         if(c == null){
-            Log.w("sendMessageAndAttachedFiles", "can not send(");
+            Log.w("sendMessageWithFiles", "can not send(");
             return false;
         }
-        Log.v("sendMessageAndAttachedFiles","send succes!");
+        Log.v("sendMessageWithFiles","send succes!");
+        return true;
+    }
+
+    public static boolean sendMessageAndAttachedByteArray(Context context, @NonNull final String subject,
+                                                      @NonNull final String attached_file){
+        Intent intent = new Intent(context, MTransmitterService.class);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_STREAM, new String[0]);
+        intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, getByteOfFile(attached_file));
+
+        ComponentName c = context.startService(intent);
+        if(c == null){
+            Log.w("sendMessageWithFiles", "can not send(");
+            return false;
+        }
+        Log.v("sendMessageWithFiles","send succes!");
         return true;
     }
 
@@ -89,16 +110,36 @@ public class MTransmitterService extends IntentService {
         if (intent != null) {
             Log.v(TAG, "intent : " + intent.toString());
             final String body = intent.getStringExtra(Intent.EXTRA_TEXT);
-            final String[] attachedFiles = intent.getStringArrayExtra(Intent.EXTRA_STREAM);
+            final String[] attachedFiles = choiceAttachedFiles(intent);//.getStringArrayExtra(Intent.EXTRA_STREAM);
             final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-            final TransmitResult ret = sendMessageAndAttachedFiles(subject, body, attachedFiles);
+            final TransmitResult ret = sendMessageWithFiles(subject, body, attachedFiles);
             EventBus.getDefault().post(ret);
         } else {
             Log.v(TAG, "intent null!");
         }
     }
 
-    private TransmitResult sendMessageAndAttachedFiles(final String subject, final String body, final String[] attachedFiles){
+    private String[] choiceAttachedFiles(Intent intent){
+        String[] attachedFiles = intent.getStringArrayExtra(Intent.EXTRA_STREAM);
+        final byte[] attachedBytes = intent.getByteArrayExtra(Intent.EXTRA_INITIAL_INTENTS);
+        if(attachedBytes == null || attachedBytes.length == 0){
+            return attachedFiles;
+        }
+
+        final String TMP_BYTEARRAY_FILENAME = "tmp.byteArray.file";
+
+        try(FileOutputStream outputStream = openFileOutput(TMP_BYTEARRAY_FILENAME, Context.MODE_PRIVATE) ) {
+            outputStream.write(attachedBytes);
+            attachedFiles = Arrays.copyOf(attachedFiles, attachedFiles.length + 1);
+            attachedFiles[attachedFiles.length - 1] = getFilesDir() + File.separator + TMP_BYTEARRAY_FILENAME;
+        } catch (IOException e ){
+            e.printStackTrace();
+        }
+
+        return attachedFiles;
+    }
+
+    private TransmitResult sendMessageWithFiles(final String subject, final String body, final String[] attachedFiles){
         final AuthenticatorClient ac = new AuthenticatorClient();
         Transmitter tr = new Transmitter(ac);
         tr.setBody(body + getVersionInfo());
