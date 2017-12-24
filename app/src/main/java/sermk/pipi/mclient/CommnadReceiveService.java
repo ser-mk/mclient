@@ -75,13 +75,15 @@ public class CommnadReceiveService extends MBaseReceiveService {
         if(mc.subj.isEmpty()){
             return false;
         }
+        boolean ret = false;
         if(FilterMessage.equalsSubject(mc.subj,SUBJECT_SHELL)){
-            doShellMessage(mc);
+            ret = doShellMessage(mc);
         }
         if(FilterMessage.equalsSubject(mc.subj,SUBJECT_BROADCAST)){
-            doBroadCastMessage(mc);
+            ret = doBroadCastMessage(mc);
         }
-        return true;
+        //todo: send result false operation!
+        return ret;
     }
 
     static private String getFirstLine(final String str){
@@ -122,7 +124,9 @@ public class CommnadReceiveService extends MBaseReceiveService {
 
 
     private boolean doShellMessage(final MessageCopy mc){
-        String command = getFirstLine(mc.content);
+        String command = "empty comand!";
+        try{ command = getFirstLine(mc.content);}
+        catch (Exception e){ return false; }
         command +=" " + mc.filename;
         final String result = runShell(command);
         Log.v(TAG, "result shell command: " + result);

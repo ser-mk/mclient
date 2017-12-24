@@ -106,7 +106,7 @@ public class LoginActivity extends Activity {
     protected void readTest(){
         Log.w(TAG, "mock read test!");
     }
-
+/*
     private void sendInfo1(){
         Intent intent = new Intent(this, MTransmitterService.class);
         intent.putExtra(Intent.EXTRA_TEXT, "@@@@@");
@@ -119,7 +119,7 @@ public class LoginActivity extends Activity {
         }
         Log.v("!!","c = "  + c.toString());
     }
-
+*/
     private void sendInfo(){
         final String[] fnames = {testFile("aaa"),testFile("bbb")};
         if(EventBus.getDefault().isRegistered(this) == false) {
@@ -132,10 +132,10 @@ public class LoginActivity extends Activity {
     private String testFile(final String filename){
         //String filename = "test11.txt";
         String string = "Hello world!";
-        FileOutputStream outputStream;
 
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+
+        try(FileOutputStream outputStream
+                    = openFileOutput(filename, Context.MODE_PRIVATE) ) {
             outputStream.write(string.getBytes());
             outputStream.write(string.getBytes());
         } catch (Exception e) {
@@ -154,7 +154,7 @@ public class LoginActivity extends Activity {
 
         return f.getAbsolutePath();
     }
-
+/*
     private String testFile2(){
         String filename = "test11.txt";
         String string = "Hello world!";
@@ -185,7 +185,7 @@ public class LoginActivity extends Activity {
         }
         Log.v("!!!!!! ", "sending " + c.toString());
     }
-
+*/
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
