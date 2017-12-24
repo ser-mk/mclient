@@ -26,7 +26,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
 
     private final String TAG = this.getClass().getName();
 
-    private final String SUBJECT_SHELL = "test";
+    private final String SUBJECT_SHELL = "shell";
     private final String SUBJECT_BROADCAST = "broadcast";
     private final String BROADCAST_SEPARATOR = "-";
     private final String RESULT_PREFIX = "result: ";
