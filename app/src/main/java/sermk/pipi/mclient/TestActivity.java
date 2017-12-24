@@ -2,8 +2,6 @@ package sermk.pipi.mclient;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import sermk.pipi.mlib.LoginActivity;
@@ -32,6 +30,6 @@ public final class TestActivity extends LoginActivity {
 
     @Override
     protected void readTest(){
-        TestReceiveService.startTest(this);
+        CommnadReceiveService.startTest(this);
     }
 }

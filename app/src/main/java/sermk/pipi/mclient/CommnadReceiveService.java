@@ -22,7 +22,7 @@ import sermk.pipi.mlib.ReceiverStruct;
  * Created by echormonov on 20.12.17.
  */
 
-public class TestReceiveService extends MBaseReceiveService {
+public class CommnadReceiveService extends MBaseReceiveService {
 
     private final String TAG = this.getClass().getName();
 
@@ -35,13 +35,13 @@ public class TestReceiveService extends MBaseReceiveService {
     public static void startTest(Context context){
         ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if(TestReceiveService.class.getName().equals(service.service.getClassName())) {
+            if(CommnadReceiveService.class.getName().equals(service.service.getClassName())) {
                 Log.v("startTest", "service run");
                 return;
             }
         }
         Log.v("startTest", "service stopped!!");
-        context.startService(new Intent(context, TestReceiveService.class));
+        context.startService(new Intent(context, CommnadReceiveService.class));
     }
 
     @Override
