@@ -29,7 +29,7 @@ public class PingReceiver extends BroadcastReceiver {
             action.isEmpty();
         } catch (Exception e){
             action = "wrong action!";
-            e.printStackTrace();
+            Log.w(TAG, "action is not exist!");
         }
         Log.v(TAG, action);
 
@@ -38,8 +38,8 @@ public class PingReceiver extends BroadcastReceiver {
             content = intent.getStringExtra(Intent.EXTRA_TEXT);
             content.isEmpty();
         } catch (Exception e){
-            content = "wrong action!";
-            e.printStackTrace();
+            content = "wrong content!";
+            Log.w(TAG, "content is not exist!");
         }
         Log.v(TAG, content);
 
@@ -49,7 +49,7 @@ public class PingReceiver extends BroadcastReceiver {
             array.hashCode();
         } catch (Exception e){
             array = "wrong byte array !".getBytes();
-            e.printStackTrace();
+            Log.w(TAG, "attached data absent!");
         }
 
         Log.v(TAG, new String(array,0, 11));
