@@ -94,7 +94,7 @@ public class MTransmitterService extends IntentService {
         intent.putExtra(Intent.EXTRA_STREAM, new String[0]);
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, getByteOfFile(attached_file));
 
-        ComponentName c = context.startService(intent);
+        final ComponentName c = context.startService(intent);
         if(c == null){
             Log.w("sendMessageWithFiles", "can not send(");
             return false;
@@ -132,8 +132,9 @@ public class MTransmitterService extends IntentService {
             outputStream.write(attachedBytes);
             attachedFiles = Arrays.copyOf(attachedFiles, attachedFiles.length + 1);
             attachedFiles[attachedFiles.length - 1] = getFilesDir() + File.separator + TMP_BYTEARRAY_FILENAME;
-        } catch (IOException e ){
+        } catch (Exception e ){
             e.printStackTrace();
+            return  new String[0];
         }
 
         return attachedFiles;
