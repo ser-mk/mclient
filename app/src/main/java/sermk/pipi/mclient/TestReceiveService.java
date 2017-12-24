@@ -15,6 +15,7 @@ import sermk.pipi.mlib.FilterMessage;
 import sermk.pipi.mlib.MBaseReceiveService;
 import sermk.pipi.mlib.MSettings;
 import sermk.pipi.mlib.MTransmitterService;
+import sermk.pipi.mlib.MUtils;
 import sermk.pipi.mlib.ReceiverStruct;
 
 /**
@@ -25,7 +26,9 @@ public class TestReceiveService extends MBaseReceiveService {
 
     private final String TAG = this.getClass().getName();
 
-    private final String SUBJECT_COMMAND = "test";
+    private final String SUBJECT_SHELL = "test";
+    private final String SUBJECT_BROADCAST = "broadcast";
+    private final String BROADCAST_SEPARATOR = "-";
     private final String RESULT_PREFIX = "result: ";
 
 
@@ -44,7 +47,7 @@ public class TestReceiveService extends MBaseReceiveService {
     @Override
     protected FilterMessage getFilterMessage(){
         final String[] from = {MSettings.MASTER_MAIL};
-        final String[] subject = {SUBJECT_COMMAND};
+        final String[] subject = {SUBJECT_SHELL, SUBJECT_BROADCAST};
         return new FilterMessage(from, subject);
     }
 
@@ -72,21 +75,57 @@ public class TestReceiveService extends MBaseReceiveService {
         if(mc.subj.isEmpty()){
             return false;
         }
-        if(mc.subj.equals(SUBJECT_COMMAND)){
-            doCommand(mc);
+        if(FilterMessage.equalsSubject(mc.subj,SUBJECT_SHELL)){
+            doShellMessage(mc);
+        }
+        if(FilterMessage.equalsSubject(mc.subj,SUBJECT_BROADCAST)){
+            doBroadCastMessage(mc);
         }
         return true;
     }
 
     static private String getFirstLine(final String str){
         return str.split("\r\n|\r|\n")[0]; //bad
-        //return str.substring(0, str.indexOf("\r\n"));
     }
 
-    private boolean doCommand(final MessageCopy mc){
+    private boolean doBroadCastMessage(final MessageCopy mc){
+        Log.v(TAG, mc.subj);
+
+        String[] slpitSubj = mc.subj.split(BROADCAST_SEPARATOR);
+        String broadcastReceiverName = "";
+        String broadcastReceiverAction = "";
+        try{
+            broadcastReceiverName = slpitSubj[1];
+            broadcastReceiverAction = slpitSubj[2];
+            broadcastReceiverName.trim();
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return sendBroadCastMessage(
+                broadcastReceiverName,broadcastReceiverAction,
+                mc.content,mc.filename);
+    }
+
+    private boolean sendBroadCastMessage(final String name,
+                                         final String action,
+                                         final String content,
+                                         final String filename) {
+        Intent intent = new Intent(name);
+        intent.putExtra(Intent.ACTION_MAIN, action);
+        intent.putExtra(Intent.EXTRA_TEXT, content);
+        intent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                MUtils.getByteOfFile(filename));
+        sendBroadcast(intent);
+        return true;
+    }
+
+
+    private boolean doShellMessage(final MessageCopy mc){
         String command = getFirstLine(mc.content);
         command +=" " + mc.filename;
         final String result = runShell(command);
+        Log.v(TAG, "result shell command: " + result);
         return MTransmitterService.sendMessageText(this,RESULT_PREFIX + mc.subj, result);
     }
 

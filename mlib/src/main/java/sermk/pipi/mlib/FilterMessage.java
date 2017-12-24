@@ -42,10 +42,25 @@ public class FilterMessage {
         if(subject.isEmpty()){
             return false;
         }
+        /*
         if( Arrays.binarySearch(this.subjects, subject) < 0 ){
             return false;
         }
-        return true;
+        */
+        for (String subj: this.subjects) {
+            if(subject.indexOf(subj) != 0){
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    static public boolean equalsSubject(final String mSubj, final String refSubj){
+        if(mSubj.indexOf(refSubj) == 0){
+            return true;
+        }
+        return false;
     }
 
 }
