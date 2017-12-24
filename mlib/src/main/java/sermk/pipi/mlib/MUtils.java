@@ -18,8 +18,9 @@ public final class MUtils {
         try(FileInputStream inputStream = new FileInputStream(pathNonLocalFile)) {
             bytes = new byte[inputStream.available()];
             inputStream.read(bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (IOException e) {
+            //e.printStackTrace();
         }
 
         return bytes;
