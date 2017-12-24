@@ -28,7 +28,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,20 +105,7 @@ public class LoginActivity extends Activity {
     protected void readTest(){
         Log.w(TAG, "mock read test!");
     }
-/*
-    private void sendInfo1(){
-        Intent intent = new Intent(this, MTransmitterService.class);
-        intent.putExtra(Intent.EXTRA_TEXT, "@@@@@");
-        final String[] fnames = {testFile("aaa"),testFile("bbb")};
-        intent.putExtra(Intent.EXTRA_STREAM,fnames);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "info");
-        ComponentName c = startService(intent);
-        if(c == null){
-            Log.v("!!", "fuckkk@ info!");
-        }
-        Log.v("!!","c = "  + c.toString());
-    }
-*/
+
     private void sendInfo(){
         final String[] fnames = {testFile("aaa"),testFile("bbb")};
         if(EventBus.getDefault().isRegistered(this) == false) {
@@ -154,38 +140,7 @@ public class LoginActivity extends Activity {
 
         return f.getAbsolutePath();
     }
-/*
-    private String testFile2(){
-        String filename = "test11.txt";
-        String string = "Hello world!";
-        File file = new File(filename);
-        try {
-            FileWriter fw = new FileWriter(file);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String[] fnames = this.fileList();
-        for (String str : fnames) {
-            Log.v(TAG,"name file: " + str);
-        }
-        return getFilesDir() + filename;
-    }
-
-
-    void test(){
-        //Intent intent = new Intent("sermk.pipi.mlib.MTransmitterService");
-        Intent intent = new Intent();
-        intent.setClassName("sermk.pipi.mclient", "sermk.pipi.mlib.MTransmitterService");
-        intent.putExtra("2131", "213");
-        Log.v("!!!!!! ", "sending1");
-        ComponentName c = startService(intent);
-        if(c == null){
-            Log.v("!!", "fuckkk@");
-        }
-        Log.v("!!!!!! ", "sending " + c.toString());
-    }
-*/
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
