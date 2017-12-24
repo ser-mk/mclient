@@ -1,5 +1,11 @@
 package sermk.pipi.mclient;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
 import sermk.pipi.mlib.LoginActivity;
 
 /**
@@ -7,6 +13,22 @@ import sermk.pipi.mlib.LoginActivity;
  */
 
 public final class TestActivity extends LoginActivity {
+
+    private final String TAG = this.getClass().getName();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.v(TAG,"???????");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intt = new Intent("PING");
+        sendBroadcast(intt);
+        Log.v(TAG,"!!!!!!!!");
+    }
 
     @Override
     protected void readTest(){
