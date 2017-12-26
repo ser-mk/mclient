@@ -145,11 +145,13 @@ public class MTransmitterService extends IntentService {
         Transmitter tr = new Transmitter(ac);
         tr.setBody(body + getVersionInfo());
         tr.set_subject(subject);
-        for (String names : attachedFiles) {
-            try {
-                tr.addAttachment(names);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if(attachedFiles != null) {
+            for (String names : attachedFiles) {
+                try {
+                    tr.addAttachment(names);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         try {
