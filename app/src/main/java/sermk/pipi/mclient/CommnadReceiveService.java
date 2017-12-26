@@ -1,6 +1,7 @@
 package sermk.pipi.mclient;
 
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -94,27 +95,38 @@ public class CommnadReceiveService extends MBaseReceiveService {
         Log.v(TAG, mc.subj);
 
         String[] slpitSubj = mc.subj.split(BROADCAST_SEPARATOR);
-        String broadcastReceiverName = "";
         String broadcastReceiverAction = "";
+        String broadcastReceiverPackage = "";
+        String broadcastReceiverName = "";
+
         try{
-            broadcastReceiverName = slpitSubj[1];
-            broadcastReceiverAction = slpitSubj[2];
-            broadcastReceiverName.trim();
+            broadcastReceiverAction = slpitSubj[1].trim();
         } catch (Exception e){
             e.printStackTrace();
             return false;
         }
-        return sendBroadCastMessage(
-                broadcastReceiverName,broadcastReceiverAction,
+        try {
+            broadcastReceiverPackage = slpitSubj[2].trim();
+            broadcastReceiverName = slpitSubj[3].trim();
+        } catch (Exception e) {
+            broadcastReceiverPackage = "";
+            broadcastReceiverName = "";
+        }
+
+        return sendBroadCastMessage(broadcastReceiverAction,
+                broadcastReceiverPackage,
+                broadcastReceiverName,
                 mc.content,mc.filename);
     }
 
-    private boolean sendBroadCastMessage(final String name,
-                                         final String action,
+    private boolean sendBroadCastMessage(final String action,
+                                         final String packageName, final String reveiverName,
                                          final String content,
                                          final String filename) {
-        Intent intent = new Intent(name);
-        intent.putExtra(Intent.ACTION_MAIN, action);
+        Intent intent = new Intent(action);
+        if(!packageName.isEmpty() && !reveiverName.isEmpty()){
+            intent.setComponent(new ComponentName(packageName, reveiverName));
+        }
         intent.putExtra(Intent.EXTRA_TEXT, content);
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
                 MUtils.getByteOfFile(filename));

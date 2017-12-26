@@ -52,6 +52,5 @@ public class PingReceiver extends BroadcastReceiver {
             Log.w(TAG, "attached data absent!");
         }
 
-        Log.v(TAG, new String(array,0, 11));
     }
 }
