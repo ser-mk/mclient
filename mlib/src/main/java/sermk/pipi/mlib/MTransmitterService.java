@@ -119,8 +119,13 @@ public class MTransmitterService extends IntentService {
         }
     }
 
+    private final String[] EMPTY_FILE_NAMES = new String[0];
+
     private String[] choiceAttachedFiles(Intent intent){
         String[] attachedFiles = intent.getStringArrayExtra(Intent.EXTRA_STREAM);
+        if(attachedFiles == null) {
+            attachedFiles = EMPTY_FILE_NAMES;
+        }
         final byte[] attachedBytes = intent.getByteArrayExtra(Intent.EXTRA_INITIAL_INTENTS);
         if(attachedBytes == null || attachedBytes.length == 0){
             return attachedFiles;
@@ -134,7 +139,7 @@ public class MTransmitterService extends IntentService {
             attachedFiles[attachedFiles.length - 1] = getFilesDir() + File.separator + TMP_BYTEARRAY_FILENAME;
         } catch (Exception e ){
             e.printStackTrace();
-            return  new String[0];
+            return  EMPTY_FILE_NAMES;
         }
 
         return attachedFiles;
@@ -145,13 +150,11 @@ public class MTransmitterService extends IntentService {
         Transmitter tr = new Transmitter(ac);
         tr.setBody(body + getVersionInfo());
         tr.set_subject(subject);
-        if(attachedFiles != null) {
-            for (String names : attachedFiles) {
-                try {
-                    tr.addAttachment(names);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        for (String names : attachedFiles) {
+            try {
+                tr.addAttachment(names);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         try {
