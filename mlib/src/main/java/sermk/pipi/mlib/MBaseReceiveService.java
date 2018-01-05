@@ -56,12 +56,19 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    protected String error = "";
+    protected String addError(final String str){
+        error += str + " > ";
+        return error;
+    }
+
     @Override
     public void run() {
 
         while (true){
             ReceiverStruct rs = new ReceiverStruct(new AuthenticatorClient());
             Message[] messages = rs.fetch();
+            error = "";
 
             succesConnection(messages.length != 0);
 
@@ -83,8 +90,10 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                     break;
                 } catch (MessagingException e) {
                     e.printStackTrace();
+                    addError(e.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    addError(e.toString());
                 }
             }
 
@@ -104,23 +113,7 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
         public String filename = "";
     }
 
-    abstract  protected MessageCopy copyMessage(Message msg);/*{
-        try {
-            final String from = msg.getFrom()[0].toString();
-            final String content = msg.getContent().toString();
-            Log.v(TAG, "From " + from + " | Content " + content);
-            if(ReceiverStruct.hasAttachments(msg)){
-                final String filename = ReceiverStruct.saveAttachmentFile(this,msg);
-                Log.v(TAG, "Receiver filename " + filename);
-            }
-
-            Log.v(TAG, "text : " + ReceiverStruct.getText(msg));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-*/
+    abstract  protected MessageCopy copyMessage(Message msg);
     abstract protected boolean actionCopyMessage(final MessageCopy mc);
 
     protected void succesConnection(boolean succes){

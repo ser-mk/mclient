@@ -4,9 +4,11 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.File;
 import java.util.List;
 
 import javax.mail.Message;
@@ -31,7 +33,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
     private final String SUBJECT_BROADCAST = "broadcast";
     private final String BROADCAST_SEPARATOR = "-";
     private final String RESULT_PREFIX = "result: ";
-
+    private final String FAILED_PREFIX = " failed ";
 
     public static void startTest(Context context){
         ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
@@ -67,6 +69,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
             Log.v(TAG, "text : " + ReceiverStruct.getText(msg));
         } catch (Exception e) {
             e.printStackTrace();
+            addError("copyMessage - " + e.toString());
         }
         return mc;
     }
@@ -84,6 +87,10 @@ public class CommnadReceiveService extends MBaseReceiveService {
             ret = doBroadCastMessage(mc);
         }
         //todo: send result false operation!
+        if(ret == false){
+            MTransmitterService.sendMessageText(this,
+                    RESULT_PREFIX + FAILED_PREFIX + mc.subj, error);
+        }
         return ret;
     }
 
@@ -103,15 +110,14 @@ public class CommnadReceiveService extends MBaseReceiveService {
             broadcastReceiverAction = slpitSubj[1].trim();
         } catch (Exception e){
             e.printStackTrace();
+            addError(e.toString());
             return false;
         }
-        try {
-            broadcastReceiverPackage = slpitSubj[2].trim();
-            broadcastReceiverName = slpitSubj[3].trim();
-        } catch (Exception e) {
-            broadcastReceiverPackage = "";
-            broadcastReceiverName = "";
-        }
+        try {broadcastReceiverPackage = slpitSubj[2].trim();}
+        catch (Exception e) {broadcastReceiverPackage = "";  addError(e.toString());}
+
+        try { broadcastReceiverName = slpitSubj[3].trim(); }
+        catch (Exception e) { broadcastReceiverName = ""; addError(e.toString());}
 
         return sendBroadCastMessage(broadcastReceiverAction,
                 broadcastReceiverPackage,
@@ -120,25 +126,47 @@ public class CommnadReceiveService extends MBaseReceiveService {
     }
 
     private boolean sendBroadCastMessage(final String action,
-                                         final String packageName, final String reveiverName,
+                                         final String packageName, final String receiverName,
                                          final String content,
                                          final String filename) {
         Intent intent = new Intent(action);
-        if(!packageName.isEmpty() && !reveiverName.isEmpty()){
-            intent.setComponent(new ComponentName(packageName, reveiverName));
-        }
         intent.putExtra(Intent.EXTRA_TEXT, content);
-        intent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-                MUtils.getByteOfFile(filename));
+        if(!packageName.isEmpty() && !receiverName.isEmpty()){
+            intent.setComponent(new ComponentName(packageName, receiverName));
+        }
+        if(packageName.isEmpty()){  //Todo it's wrong!
+            intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, MUtils.getByteOfFile(filename));
+        } else {
+            intent.putExtra(Intent.EXTRA_STREAM,
+                    getUriFile(packageName, filename).toString());
+        }
+
         sendBroadcast(intent);
         return true;
+    }
+
+    private Uri getUriFile(final String packagename, final String filename){
+        Uri uri = Uri.EMPTY;
+        try {
+            File file = new File(filename);
+            uri = android.support.v4.content.FileProvider.
+                    getUriForFile(this, BuildConfig.APPLICATION_ID, file);
+            grantUriPermission(packagename, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } catch (Exception e){
+            uri = Uri.EMPTY;
+            addError("Uri.EMPTY");
+        }
+        Log.v(TAG, "broadcast attached URI = " + uri);
+        return uri;
     }
 
 
     private boolean doShellMessage(final MessageCopy mc){
         String command = "empty comand!";
         try{ command = getFirstLine(mc.content);}
-        catch (Exception e){ return false; }
+        catch (Exception e){
+            addError(e.toString());
+            return false; }
         command +=" " + mc.filename;
         final String result = runShell(command);
         Log.v(TAG, "result shell command: " + result);
@@ -146,13 +174,10 @@ public class CommnadReceiveService extends MBaseReceiveService {
     }
 
     static private String runShell(final String command){
-        if (!Shell.SU.available()){
-            return "su unvailable =(";
-        }
+        if (!Shell.SU.available()){return "su unvailable =(";}
         final List<String> suResult = Shell.SU.run( command );
         final String output = TextUtils.join("\r\n", suResult);
         return command + " # " + output;
-
     }
 
     @Override
