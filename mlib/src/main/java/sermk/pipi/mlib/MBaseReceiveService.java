@@ -13,6 +13,8 @@ import java.io.IOException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import sermk.pipi.pilib.ErrorCollector;
+
 
 public abstract class MBaseReceiveService extends Service implements Runnable {
 
@@ -56,11 +58,8 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    protected String error = "";
-    protected String addError(final String str){
-        error += str + " > ";
-        return error;
-    }
+    protected final ErrorCollector EC = new ErrorCollector();
+
 
     @Override
     public void run() {
@@ -68,7 +67,7 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
         while (true){
             ReceiverStruct rs = new ReceiverStruct(new AuthenticatorClient());
             Message[] messages = rs.fetch();
-            error = "";
+            EC.clear();
 
             succesConnection(messages.length != 0);
 
@@ -90,10 +89,10 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                     break;
                 } catch (MessagingException e) {
                     e.printStackTrace();
-                    addError(e.toString());
+                    EC.addError(ErrorCollector.getStackTraceString(e));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    addError(e.toString());
+                    EC.addError(ErrorCollector.getStackTraceString(e));
                 }
             }
 

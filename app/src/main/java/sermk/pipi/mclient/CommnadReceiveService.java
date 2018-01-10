@@ -20,6 +20,8 @@ import sermk.pipi.mlib.MSettings;
 import sermk.pipi.mlib.MTransmitterService;
 import sermk.pipi.mlib.MUtils;
 import sermk.pipi.mlib.ReceiverStruct;
+import sermk.pipi.pilib.ErrorCollector;
+import sermk.pipi.pilib.MClient;
 
 /**
  * Created by echormonov on 20.12.17.
@@ -69,7 +71,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
             Log.v(TAG, "text : " + ReceiverStruct.getText(msg));
         } catch (Exception e) {
             e.printStackTrace();
-            addError("copyMessage - " + e.toString());
+            EC.addError(ErrorCollector.getStackTraceString(e));
         }
         return mc;
     }
@@ -88,8 +90,9 @@ public class CommnadReceiveService extends MBaseReceiveService {
         }
         //todo: send result false operation!
         if(ret == false){
-            MTransmitterService.sendMessageText(this,
-                    RESULT_PREFIX + FAILED_PREFIX + mc.subj, error);
+            MClient.sendMessage(this,
+                    ErrorCollector.subjError(TAG,mc.subj)
+                    , EC.error);
         }
         return ret;
     }
@@ -110,14 +113,16 @@ public class CommnadReceiveService extends MBaseReceiveService {
             broadcastReceiverAction = slpitSubj[1].trim();
         } catch (Exception e){
             e.printStackTrace();
-            addError(e.toString());
+            EC.addError(ErrorCollector.getStackTraceString(e));
             return false;
         }
         try {broadcastReceiverPackage = slpitSubj[2].trim();}
-        catch (Exception e) {broadcastReceiverPackage = "";  addError(e.toString());}
+        catch (Exception e) {broadcastReceiverPackage = "";
+            EC.addError(ErrorCollector.getStackTraceString(e));}
 
         try { broadcastReceiverName = slpitSubj[3].trim(); }
-        catch (Exception e) { broadcastReceiverName = ""; addError(e.toString());}
+        catch (Exception e) { broadcastReceiverName = "";
+        EC.addError(ErrorCollector.getStackTraceString(e));}
 
         return sendBroadCastMessage(broadcastReceiverAction,
                 broadcastReceiverPackage,
@@ -154,7 +159,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
             grantUriPermission(packagename, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } catch (Exception e){
             uri = Uri.EMPTY;
-            addError("Uri.EMPTY");
+            EC.addError("Uri.EMPTY");
         }
         Log.v(TAG, "broadcast attached URI = " + uri);
         return uri;
@@ -165,7 +170,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
         String command = "empty comand!";
         try{ command = getFirstLine(mc.content);}
         catch (Exception e){
-            addError(e.toString());
+            EC.addError(ErrorCollector.getStackTraceString(e));
             return false; }
         command +=" " + mc.filename;
         final String result = runShell(command);
