@@ -1,9 +1,22 @@
+*~
+*.bak
+*.class
+bin/
+*.properties
+*.project
+*.cproject
+*.settings
+*.pyc
+
+# idea project files
+.idea/
+.idea/.name
 *.iml
+*.ipr
+*.iws
+
+#Gradle-based build
 .gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
-.externalNativeBuild
+build/
+# Android Studio/IntelliJ IDEA related files.
+*.iml
