@@ -25,3 +25,16 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
+ext {
+    supportLibVersion = '25.4.0'  // variable that can be referenced to keep support libs consistent
+    commonLibVersion = '1.9.1'
+    versionBuildTool = '26.0.2'
+    versionCompiler = 25
+    versionTarget = 25
+    versionMinSdkTarget = 24
+    versionNameString = '1.0.0'
+    javaSourceCompatibility = JavaVersion.VERSION_1_7
+    javaTargetCompatibility = JavaVersion.VERSION_1_7
+}
