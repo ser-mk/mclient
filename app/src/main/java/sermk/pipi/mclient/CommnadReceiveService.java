@@ -38,14 +38,15 @@ public class CommnadReceiveService extends MBaseReceiveService {
     private final String FAILED_PREFIX = " failed ";
 
     public static void startTest(Context context){
+        final String TAG_CONTEXT = context.getClass().getName();
         ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
             if(CommnadReceiveService.class.getName().equals(service.service.getClassName())) {
-                Log.v("startTest", "service run");
+                Log.v(TAG_CONTEXT, "service run");
                 return;
             }
         }
-        Log.v("startTest", "service stopped!!");
+        Log.v(TAG_CONTEXT, "service stopped!!");
         context.startService(new Intent(context, CommnadReceiveService.class));
     }
 
