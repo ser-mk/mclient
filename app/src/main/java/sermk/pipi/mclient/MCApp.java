@@ -17,7 +17,7 @@ public class MCApp extends Application {
     public void onCreate() {
         super.onCreate();
         // Required initialization logic here!
-        MSettings.create(this);
+        AuthSettings.create(this);
         locationObservable = new LocationObservable(this);
     }
 

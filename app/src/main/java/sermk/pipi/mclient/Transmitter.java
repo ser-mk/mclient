@@ -126,7 +126,7 @@ public class Transmitter {
     }
 
     private void setDefaultContent(){
-        final String[] addresses = {MSettings.MASTER_MAIL};
+        final String[] addresses = {AuthSettings.MASTER_MAIL};
         set_to(addresses);
     }
 

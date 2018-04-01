@@ -60,8 +60,8 @@ public class LoginActivity extends Activity {
 
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        mEmailView.setText(MSettings.getInstance().getSelfMail());
-        mPasswordView.setText(MSettings.getInstance().getSelfPassword());
+        mEmailView.setText(AuthSettings.getInstance().getSelfMail());
+        mPasswordView.setText(AuthSettings.getInstance().getSelfPassword());
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -181,8 +181,8 @@ public class LoginActivity extends Activity {
             focusView.requestFocus();
             return;
         }
-        MSettings.getInstance().setSelfMail(email);
-        MSettings.getInstance().setSelfPassword(password);
+        AuthSettings.getInstance().setSelfMail(email);
+        AuthSettings.getInstance().setSelfPassword(password);
         sendInfo();
     }
 

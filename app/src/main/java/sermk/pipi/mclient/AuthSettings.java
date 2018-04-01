@@ -7,26 +7,26 @@ import android.content.SharedPreferences;
  * Created by echormonov on 11.12.17.
  */
 
-public final class MSettings {
+public final class AuthSettings {
 
     static final public String MASTER_MAIL = "echormonov@smartlabs.tv";
 
-    static MSettings instance = null;
+    static AuthSettings instance = null;
     private SharedPreferences mSettings;
 
     final private String FIELD_MAIL = "email";
     final private String FIELD_PASSWORD = "pass";
 
-    public MSettings(Context context) {
+    public AuthSettings(Context context) {
         mSettings = context.getSharedPreferences("msettings", Context.MODE_PRIVATE);
     }
 
     public static void create(Context context) {
 
-        instance = new MSettings(context);
+        instance = new AuthSettings(context);
     }
 
-    public static MSettings getInstance(){
+    public static AuthSettings getInstance(){
         return instance;
     }
 

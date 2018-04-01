@@ -17,8 +17,8 @@ public final class AuthenticatorClient extends javax.mail.Authenticator {
     }
 
     public AuthenticatorClient() {
-        this._user = MSettings.getInstance().getSelfMail();
-        this._pass = MSettings.getInstance().getSelfPassword();
+        this._user = AuthSettings.getInstance().getSelfMail();
+        this._pass = AuthSettings.getInstance().getSelfPassword();
     }
 
     @Override
