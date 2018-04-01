@@ -15,6 +15,7 @@ public class BootReceiver extends BroadcastReceiver {
         // an Intent broadcast.
         //throw new UnsupportedOperationException("Not yet implemented");
         Log.v(TAG, "####boot "+ intent.toString());
-        Log.w(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        CommnadReceiveService.startTest(context);
     }
 }
