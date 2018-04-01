@@ -146,7 +146,7 @@ public class MTransmitterService extends IntentService {
     private TransmitResult sendMessageWithFiles(final String subject, final String body, final String[] attachedFiles){
         final AuthenticatorClient ac = new AuthenticatorClient();
         Transmitter tr = new Transmitter(ac);
-        tr.setBody(body + getVersionInfo());
+        tr.setBody(body + getAdditionalInfo());
         tr.set_subject(subject);
         for (String names : attachedFiles) {
             try {
@@ -175,7 +175,15 @@ public class MTransmitterService extends IntentService {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return "\r\n" + "app: " + getApplicationContext().getPackageName() + " version: " + versionName + " code: " + String.valueOf(versionCode);
+        return getApplicationContext().getPackageName() + " version: " + versionName + " code: " + String.valueOf(versionCode);
+    }
+
+    private String getAdditionalInfo(){
+        return "\r\napp: " + getVersionInfo() + "\r\nlocation: " + getLocationInfo();
+    }
+
+    private String getLocationInfo(){
+        return ((MCApp)getApplication()).getStringLocation();
     }
 
 }
