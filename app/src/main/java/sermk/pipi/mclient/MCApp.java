@@ -10,11 +10,15 @@ import android.content.res.Configuration;
 public class MCApp extends Application {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
+
+    private LocationObservable locationObservable;
+
     @Override
     public void onCreate() {
         super.onCreate();
         // Required initialization logic here!
         MSettings.create(this);
+        locationObservable = new LocationObservable(this);
     }
 
     // Called by the system when the device configuration changes while your component is running.
@@ -30,5 +34,15 @@ public class MCApp extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        locationObservable.release();
+    }
+
+    public String getStringLocation(){
+        return locationObservable.getStringLocation();
     }
 }
