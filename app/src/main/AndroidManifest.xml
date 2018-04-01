@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".MTestContoller"
+        android:name=".MCApp"
         android:allowBackup="true"
         android:configChanges="orientation"
         android:icon="@mipmap/ic_launcher"

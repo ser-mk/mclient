@@ -7,7 +7,7 @@ import android.content.res.Configuration;
  * Created by echormonov on 20.12.17.
  */
 
-public class MTestContoller extends Application {
+public class MCApp extends Application {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
     @Override
