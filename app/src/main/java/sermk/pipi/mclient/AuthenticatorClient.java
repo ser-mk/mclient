@@ -1,4 +1,4 @@
-package sermk.pipi.mlib;
+package sermk.pipi.mclient;
 
 import javax.mail.PasswordAuthentication;
 

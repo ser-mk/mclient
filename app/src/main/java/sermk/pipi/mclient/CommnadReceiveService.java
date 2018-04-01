@@ -14,12 +14,6 @@ import java.util.List;
 import javax.mail.Message;
 
 import eu.chainfire.libsuperuser.Shell;
-import sermk.pipi.mlib.FilterMessage;
-import sermk.pipi.mlib.MBaseReceiveService;
-import sermk.pipi.mlib.MSettings;
-import sermk.pipi.mlib.MTransmitterService;
-import sermk.pipi.mlib.MUtils;
-import sermk.pipi.mlib.ReceiverStruct;
 import sermk.pipi.pilib.ErrorCollector;
 import sermk.pipi.pilib.MClient;
 

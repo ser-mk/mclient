@@ -1,2 +1,2 @@
-include ':app', ':mlib', ':PiLib'
+include ':app', ':PiLib'
 project(':PiLib').projectDir = new File('EXT/PiLib')

@@ -1,4 +1,4 @@
-package sermk.pipi.mlib;
+package sermk.pipi.mclient;
 
 import java.io.IOException;
 import java.util.Arrays;

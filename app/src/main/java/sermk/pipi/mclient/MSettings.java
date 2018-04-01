@@ -1,4 +1,4 @@
-package sermk.pipi.mlib;
+package sermk.pipi.mclient;
 
 import android.content.Context;
 import android.content.SharedPreferences;

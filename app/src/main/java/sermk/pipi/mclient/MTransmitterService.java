@@ -1,4 +1,4 @@
-package sermk.pipi.mlib;
+package sermk.pipi.mclient;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -16,10 +16,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
-import static sermk.pipi.mlib.MUtils.getByteOfFile;
+import static sermk.pipi.mclient.MUtils.getByteOfFile;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

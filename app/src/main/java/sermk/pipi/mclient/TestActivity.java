@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import sermk.pipi.mlib.LoginActivity;
-
 /**
  * Created by echormonov on 20.12.17.
  */

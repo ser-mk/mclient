@@ -1,4 +1,4 @@
-package sermk.pipi.mlib;
+package sermk.pipi.mclient;
 
 import android.app.Notification;
 import android.app.NotificationManager;

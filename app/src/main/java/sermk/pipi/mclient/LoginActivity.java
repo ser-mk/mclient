@@ -1,12 +1,10 @@
-package sermk.pipi.mlib;
+package sermk.pipi.mclient;
 
 
 import android.app.Activity;
 
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 
 
 import android.os.Bundle;

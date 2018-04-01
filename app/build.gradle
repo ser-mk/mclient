@@ -27,6 +27,8 @@ dependencies {
     implementation 'com.android.support:support-core-utils:25+'
     compile 'eu.chainfire:libsuperuser:1.0.0.+'
     implementation project(':PiLib')
-    implementation project(':mlib')
-
+    compile 'com.sun.mail:android-mail:1.6.0'
+    compile 'com.sun.mail:android-activation:1.6.0'
+    compile 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.android.support:support-annotations:27.0.2'
 }
