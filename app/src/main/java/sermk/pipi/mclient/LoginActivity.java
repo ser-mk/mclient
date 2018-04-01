@@ -101,7 +101,7 @@ public class LoginActivity extends Activity {
 
 
     protected void readTest(){
-        Log.w(TAG, "mock read test!");
+        CommnadReceiveService.startTest(this);
     }
 
     private void sendInfo(){
