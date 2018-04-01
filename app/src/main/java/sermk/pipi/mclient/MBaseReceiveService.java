@@ -48,7 +48,7 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
     public void onCreate() {
         super.onCreate();
         showNotification(TAG);
-        thread = new Thread(this,"reciver " + TAG);
+        thread = new Thread(this,"reciver thread - " + TAG);
         thread.start();
     }
 

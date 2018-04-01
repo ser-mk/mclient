@@ -31,14 +31,13 @@ public class MTransmitterService extends IntentService {
 
     public enum TransmitResult{ SUCCES, FAILED };
 
-    //final private String TAG = this.getClass().getName();
+    final private String TAG = this.getClass().getName();
 
     public MTransmitterService() {
         super("MTransmitterService");
     }
 
     NotificationManager mNotificationManager;
-    final String TAG = "MTransmitterService";
     private static final int NOTIFICATION = R.string.app_name;
 
     private void showNotification(final CharSequence text) {
