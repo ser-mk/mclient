@@ -13,21 +13,21 @@ import java.lang.reflect.Field;
  */
 
 class MCSettings {
-    static public class Store {
+    static public class Settings {
         public int timeout_ms_reciever = 1000;
         public long timeout_ms_location_reciever = 1000;
         public long distance_meter_location_reciever = 1;
     }
 
     static final String TAG = "MCSettings";
-    static private Store store;
+    static private Settings settings;
     static private final String SHARED_PREF_NAME = "MCSettings";
     static private final String FIELD_JSON_STORE = "all_settings";
 
 
-    static public Store getMCSettingInstance(Context context){
-        if(store != null){
-            return store;
+    static public Settings getMCSettingInstance(Context context){
+        if(settings != null){
+            return settings;
         }
         final SharedPreferences settings =
                 context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -36,18 +36,18 @@ class MCSettings {
 
         if(json.isEmpty()){
             Log.v(TAG,"settings not found!");
-            store = new Store();
-            return store;
+            MCSettings.settings = new Settings();
+            return MCSettings.settings;
         }
-        final Store temp = new Gson().fromJson(json, Store.class);
+        final Settings temp = new Gson().fromJson(json, Settings.class);
         if(temp == null){
             Log.v(TAG,"settings broken!");
-            store = new Store();
-            return store;
+            MCSettings.settings = new Settings();
+            return MCSettings.settings;
         }
 
-        store = temp;
-        return store;
+        MCSettings.settings = temp;
+        return MCSettings.settings;
     }
 
     static String getJsonStore(Context context){
@@ -58,7 +58,7 @@ class MCSettings {
 
     static public boolean saveMCSettingInstance(Context context, String json){
 
-        final Store temp = new Gson().fromJson(json, Store.class);
+        final Settings temp = new Gson().fromJson(json, Settings.class);
         if(temp == null){
             Log.v(TAG,"json broken!");
             return false;
@@ -75,9 +75,9 @@ class MCSettings {
         return true;
     }
 
-    static public boolean checkNull(Store tmp){
+    static public boolean checkNull(Settings tmp){
         try {
-            for (Field f : Store.class.getDeclaredFields())
+            for (Field f : Settings.class.getDeclaredFields())
                     if (f.get(tmp) == null)
                         return true;
         } catch (IllegalAccessException e) {

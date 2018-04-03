@@ -4,7 +4,6 @@ import android.support.test.rule.ActivityTestRule;
 
 import com.google.gson.Gson;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class MCSettingsTest {
 
     @Test
     public void saveMCSettingInstance() throws Exception {
-        MCSettings.Store tmp = MCSettings.getMCSettingInstance(activityTestRule.getActivity());
+        MCSettings.Settings tmp = MCSettings.getMCSettingInstance(activityTestRule.getActivity());
 
         String js = new Gson().toJson(tmp);
 
