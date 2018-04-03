@@ -8,6 +8,7 @@ import android.util.Log;
 
 import sermk.pipi.pilib.CommandCollection;
 import sermk.pipi.pilib.ErrorCollector;
+import sermk.pipi.pilib.ReciverSkeleton;
 
 public class SettingsReciever extends BroadcastReceiver {
 
@@ -16,44 +17,16 @@ public class SettingsReciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-        //throw new UnsupportedOperationException("Not yet implemented");
         EC.clear();
-        Log.v(TAG, "inent: " + intent.toString());
 
-        String action = "";
-        try{
-            action = intent.getAction().trim();
-        } catch (Exception e){
-            action = "wrong action!";
-            Log.w(TAG, "action is not exist!");
-        }
-        Log.v(TAG, action);
-
-        String content = "";
-        try{
-            content = intent.getStringExtra(Intent.EXTRA_TEXT);
-            content.isEmpty();
-        } catch (Exception e){
-            content = "wrong content!";
-            Log.w(TAG, "content is not exist!");
-        }
-        Log.v(TAG, content);
-
-        byte[] array = new byte[0];
-        try{
-            array = intent.getByteArrayExtra(Intent.EXTRA_INITIAL_INTENTS);
-            array.hashCode();
-        } catch (Exception e){
-            array = "wrong byte array !".getBytes();
-            Log.w(TAG, "attached data absent!");
-        }
+        final ReciverSkeleton.ReciverVarible rv
+                = ReciverSkeleton.parseIntent(intent, TAG);
+        EC.addError(rv.EC.error);
 
         String error = ErrorCollector.NO_ERROR;
 
         try {
-            error = doAction(context, content, action);
+            error = doAction(context, rv.content, rv.action);
         } catch (Exception e){
             e.printStackTrace();
             error = e.toString();
@@ -65,7 +38,8 @@ public class SettingsReciever extends BroadcastReceiver {
 
         Log.v(TAG, EC.error);
 
-        MTransmitterService.sendMessageText(context, EC.subjError(TAG,action), EC.error);
+        MTransmitterService.sendMessageText(context,
+                EC.subjError(TAG,rv.action), EC.error);
     }
 
     private String doAction(Context context, final String content, @NonNull final String action){
