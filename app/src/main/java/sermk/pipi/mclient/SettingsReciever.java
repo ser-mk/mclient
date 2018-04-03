@@ -53,12 +53,19 @@ public class SettingsReciever extends BroadcastReceiver {
         } else if(CommandCollection.
                 ACTION_RECIVER_FOR_ALL_QUERY_SETTINGS.
                 equals(action)){
-            final String json = MCSettings.getJsonStore(context);
-            MTransmitterService.sendMessageText(context,action,json);
+            final String settings = getSettings(context);
+            Log.v(TAG,"settings for send " + settings);
+            MTransmitterService.sendMessageText(context,action,settings);
         } else {
             return "undefined Action for SettingsReciever";
         }
 
         return ErrorCollector.NO_ERROR;
+    }
+
+    private String getSettings(Context context){
+        final String json = MCSettings.getSaveJsonSettings(context);
+        final String id = MUtils.md5(AuthSettings.getInstance().getSelfPassword());
+        return json + "\r\nid: " + id;
     }
 }

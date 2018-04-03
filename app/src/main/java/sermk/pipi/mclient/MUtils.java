@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by echormonov on 23.12.17.
@@ -34,4 +36,28 @@ public final class MUtils {
 
         return bytes;
     }
+
+    static public String md5(String source) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(source.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                /*
+                hexString.append(Integer.
+                        toHexString((0xFF & messageDigest[i]) + 0x100)); */
+                hexString.append(Integer.toString(
+                        ( messageDigest[i] & 0xff ) + 0x100,
+                        16).substring( 1 ));
+            return hexString.toString();
+        }catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
 }
