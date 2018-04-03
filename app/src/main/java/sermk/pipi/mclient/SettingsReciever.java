@@ -21,7 +21,6 @@ public class SettingsReciever extends BroadcastReceiver {
 
         final ReciverSkeleton.ReciverVarible rv
                 = ReciverSkeleton.parseIntent(intent, TAG);
-        EC.addError(rv.EC.error);
 
         String error = ErrorCollector.NO_ERROR;
 
@@ -64,7 +63,7 @@ public class SettingsReciever extends BroadcastReceiver {
     }
 
     private String getSettings(Context context){
-        final String json = MCSettings.getSaveJsonSettings(context);
+        final String json = MCSettings.getJsonStore(context);
         final String id = MUtils.md5(AuthSettings.getInstance().getSelfPassword());
         return json + "\r\nid: " + id;
     }
