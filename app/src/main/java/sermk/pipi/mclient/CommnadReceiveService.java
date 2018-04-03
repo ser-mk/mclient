@@ -44,6 +44,16 @@ public class CommnadReceiveService extends MBaseReceiveService {
         context.startService(new Intent(context, CommnadReceiveService.class));
     }
 
+    private int timeout_ms_sleep = 1000;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Log.i(TAG, "creating service reciver with timeout_ms_sleep " + timeout_ms_sleep);
+        timeout_ms_sleep = MCSettings.getMCSettingInstance(this).timeout_ms_reciever;
+    }
+
     @Override
     protected FilterMessage getFilterMessage(){
         final String[] from = {AuthSettings.MASTER_MAIL};
@@ -182,6 +192,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
 
     @Override
     protected long sleepMillis() {
-        return super.sleepMillis();
+        //return super.sleepMillis();
+        return timeout_ms_sleep;
     }
 }

@@ -14,8 +14,8 @@ import java.lang.reflect.Field;
 
 class MCSettings {
     static public class Settings {
-        public int timeout_ms_reciever = 1000;
-        public long timeout_ms_location_reciever = 1000;
+        public int timeout_ms_reciever = 10000;
+        public long timeout_ms_location_reciever = 0;
         public long distance_meter_location_reciever = 1;
     }
 

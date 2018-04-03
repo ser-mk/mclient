@@ -20,8 +20,6 @@ class LocationObservable implements LocationListener {
     private final boolean enable;
     private LocationManager locationManager;
     private final String TAG = this.getClass().getName();
-    private final long MIN_TIME_BW_UPDATES = 1000 * 0;
-    private final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
 
     private Location mLastLocation;
 
@@ -74,11 +72,13 @@ class LocationObservable implements LocationListener {
             return false;
         }
 
+        final MCSettings.Settings settings = MCSettings.getMCSettingInstance(context);
+
         try {
             locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
-                    MIN_TIME_BW_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    settings.timeout_ms_location_reciever,
+                    settings.distance_meter_location_reciever, this);
         } catch (Exception e){
             e.printStackTrace();
             return false;
