@@ -28,9 +28,5 @@ public class MCSettingsTest {
         boolean res = MCSettings.saveMCSettingInstance(activityTestRule.getActivity(), js);
 
         assertTrue(res);
-
-
-
-
     }
 }
