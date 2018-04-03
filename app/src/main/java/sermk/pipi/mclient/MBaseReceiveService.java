@@ -14,6 +14,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 
 import sermk.pipi.pilib.ErrorCollector;
+import sermk.pipi.pilib.WatchConnectionMClient;
 
 
 public abstract class MBaseReceiveService extends Service implements Runnable {
@@ -116,7 +117,13 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
     abstract protected boolean actionCopyMessage(final MessageCopy mc);
 
     protected void succesConnection(boolean succes){
-
+        if(succes) {
+            WatchConnectionMClient.sendMCConnectionResult(this,
+                    WatchConnectionMClient.SUCCES);
+        } else {
+            WatchConnectionMClient.sendMCConnectionResult(this,
+                    "problem connection");
+        }
     }
 
     abstract  protected FilterMessage getFilterMessage();
