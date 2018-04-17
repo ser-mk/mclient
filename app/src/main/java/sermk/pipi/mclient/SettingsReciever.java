@@ -8,7 +8,7 @@ import android.util.Log;
 
 import sermk.pipi.pilib.CommandCollection;
 import sermk.pipi.pilib.ErrorCollector;
-import sermk.pipi.pilib.ReciverSkeleton;
+import sermk.pipi.pilib.UniversalReciver;
 
 public class SettingsReciever extends BroadcastReceiver {
 
@@ -19,8 +19,8 @@ public class SettingsReciever extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         EC.clear();
 
-        final ReciverSkeleton.ReciverVarible rv
-                = ReciverSkeleton.parseIntent(intent, TAG);
+        final UniversalReciver.ReciverVarible rv
+                = UniversalReciver.parseIntent(intent, TAG);
 
         String error = ErrorCollector.NO_ERROR;
 

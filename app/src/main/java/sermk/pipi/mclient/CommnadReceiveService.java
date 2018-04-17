@@ -139,18 +139,18 @@ public class CommnadReceiveService extends MBaseReceiveService {
                                          final String packageName, final String receiverName,
                                          final String content,
                                          final String filename) {
-        Intent intent = new Intent(action);
-        intent.putExtra(Intent.EXTRA_TEXT, content);
+        Intent intent = new Intent(action);/*
+        intent.putExtra(NameFieldCollection.FIELD_RECIVER_DATA_TEXT, content);
         if(!packageName.isEmpty() && !receiverName.isEmpty()){
             intent.setComponent(new ComponentName(packageName, receiverName));
         }
         if(packageName.isEmpty()){  //Todo it's wrong!
-            intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, MUtils.getByteOfFile(filename));
+            intent.putExtra(NameFieldCollection.FIELD_RECIVER_ATTACHED_BYTES, MUtils.getByteOfFile(filename));
         } else {
             intent.putExtra(Intent.EXTRA_STREAM,
                     getUriFile(packageName, filename).toString());
         }
-
+*/
         sendBroadcast(intent);
         return true;
     }
