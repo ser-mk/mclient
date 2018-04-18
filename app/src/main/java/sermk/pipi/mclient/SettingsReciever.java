@@ -8,6 +8,7 @@ import android.util.Log;
 
 import sermk.pipi.pilib.CommandCollection;
 import sermk.pipi.pilib.ErrorCollector;
+import sermk.pipi.pilib.PiUtils;
 import sermk.pipi.pilib.UniversalReciver;
 
 public class SettingsReciever extends BroadcastReceiver {
@@ -63,7 +64,7 @@ public class SettingsReciever extends BroadcastReceiver {
     }
 
     private String getSettings(Context context){
-        final String json = MCSettings.getJsonStore(context);
+        final String json = PiUtils.getJsonFromShared(context);
         final String id = MUtils.md5(AuthSettings.getInstance().getSelfPassword());
         return json + "\r\nid: " + id;
     }
