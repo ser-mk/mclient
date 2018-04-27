@@ -40,17 +40,11 @@ public final class AuthSettings {
         return true;
     }
 
-    public static String getSelfMail1(){
-        return "tretab873@gmail.com";
-    }
 
     public String getSelfMail(){
-        return mSettings.getString(FIELD_MAIL,"!!!!!");
+        return mSettings.getString(FIELD_MAIL,"");
     }
 
-    public static String getSelfPassword1(){
-        return "zaq1234567890";
-    }
 
     public String getSelfPassword(){
         return mSettings.getString(FIELD_PASSWORD,"");
