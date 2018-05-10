@@ -88,8 +88,8 @@ public final class ReceiverStruct {
         if(store == null)
             return;
         try {
-            emailFolder.close(false);
             Log.i(TAG, "close inbox folder");
+            emailFolder.close(true);
         } catch (MessagingException e) {
             e.printStackTrace();
         }

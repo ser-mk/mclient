@@ -85,7 +85,7 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                             + " has attached " + ReceiverStruct.hasAttachments(msg));
                     mc = copyMessage(msg);
                     //todo: replace
-                    //ReceiverStruct.markDelete(msg);
+                    ReceiverStruct.markDelete(msg);
                     rs.release();
                     break;
                 } catch (MessagingException e) {
