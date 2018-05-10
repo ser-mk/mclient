@@ -36,11 +36,11 @@ public class CommnadReceiveService extends MBaseReceiveService {
         ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
             if(CommnadReceiveService.class.getName().equals(service.service.getClassName())) {
-                Log.v(TAG_CONTEXT, "service run");
+                Log.i(TAG_CONTEXT, "service run");
                 return;
             }
         }
-        Log.v(TAG_CONTEXT, "service stopped!!");
+        Log.i(TAG_CONTEXT, "service stopped!!");
         context.startService(new Intent(context, CommnadReceiveService.class));
     }
 

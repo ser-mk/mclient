@@ -79,7 +79,7 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
                     if(fm.checkMessage(msg) == false){
                         continue;
                     }
-                    Log.v(TAG, "read mesasge number " + String.valueOf(msg.getMessageNumber())
+                    Log.i(TAG, "read mesasge number " + String.valueOf(msg.getMessageNumber())
                             + " from " + msg.getFrom()[0].toString()
                             + " with subject " + msg.getSubject()
                             + " has attached " + ReceiverStruct.hasAttachments(msg));

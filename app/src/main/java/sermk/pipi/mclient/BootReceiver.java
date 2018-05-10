@@ -14,7 +14,7 @@ public class BootReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         //throw new UnsupportedOperationException("Not yet implemented");
-        Log.v(TAG, "####boot "+ intent.toString());
+        Log.i(TAG, "####boot "+ intent.toString());
 
         CommnadReceiveService.startTest(context);
     }

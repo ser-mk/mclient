@@ -89,10 +89,12 @@ public final class ReceiverStruct {
             return;
         try {
             emailFolder.close(false);
+            Log.i(TAG, "close inbox folder");
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         try {
+            Log.i(TAG, "close pop3s store");
             store.close();
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -122,7 +124,7 @@ public final class ReceiverStruct {
     */
     public static void markDelete(Message msg) throws MessagingException {
         msg.setFlag(Flags.Flag.DELETED, true);
-        System.out.println("Marked DELETE for message: " + msg.getMessageNumber());
+        System.out.println("Marked DELETE and save changes for message: " + msg.getMessageNumber());
     }
 
     public static boolean hasAttachments(Message msg) throws MessagingException, IOException {
