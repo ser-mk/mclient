@@ -10,7 +10,8 @@ import android.content.SharedPreferences;
 public final class AuthSettings {
 
     static final public String[] MASTER_MAIL =
-            new String[] {"master@pinects.com",
+            new String[] {
+                    "master@pinects.com",
                     "master1pibox@gmail.com",
                     "master0pimaster@gmail.com"};
 

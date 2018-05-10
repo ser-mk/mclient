@@ -9,6 +9,8 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.InternetAddress;
 
+import sermk.pipi.pilib.PiUtils;
+
 /**
  * Created by echormonov on 19.12.17.
  */
@@ -31,7 +33,7 @@ public class FilterMessage {
         }
 
         final String from = ((InternetAddress)address[0]).getAddress();
-        if( Arrays.binarySearch(this.froms, from) < 0 ){
+        if( !PiUtils.contains2(this.froms, from) ){
             return false;
         }
 
