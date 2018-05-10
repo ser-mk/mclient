@@ -43,7 +43,7 @@ public class Transmitter {
     private Multipart _multipart;
 
     private void init() {
-        _host = "smtp.gmail.com"; // default smtp server
+        _host = "smtp.yandex.ru";//"smtp.gmail.com"; // default smtp server
         _port = "465"; // default smtp port
         _sport = "465"; // default socketfactory port
 

@@ -44,9 +44,9 @@ public final class ReceiverStruct {
     }
 
     private void setDefaultProp(){
-        host = "imap.gmail.com";
+        host = "imap.yandex.ru";
         properties.put("mail.imap.host", host);
-        properties.put("mail.imap.port", "995");
+        properties.put("mail.imap.port", "993");
         properties.put("mail.imap.starttls.enable", "true");
         storeType = "imaps";
     }
