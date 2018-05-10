@@ -56,7 +56,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
 
     @Override
     protected FilterMessage getFilterMessage(){
-        final String[] from = {AuthSettings.MASTER_MAIL};
+        final String[] from = AuthSettings.MASTER_MAIL;
         final String[] subject = {SUBJECT_SHELL, SUBJECT_BROADCAST};
         return new FilterMessage(from, subject);
     }
