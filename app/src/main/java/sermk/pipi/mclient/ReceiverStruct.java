@@ -39,16 +39,24 @@ public final class ReceiverStruct {
     public ReceiverStruct(AuthenticatorClient ac) {
         properties = new Properties();
         this.ac = ac;
-        setDefaultProp();
-
+        //setDefaultPropIMAP();
+        setDefaultPropPOP3();
     }
 
-    private void setDefaultProp(){
+    private void setDefaultPropIMAP(){
         host = "imap.yandex.ru";
         properties.put("mail.imap.host", host);
         properties.put("mail.imap.port", "993");
         properties.put("mail.imap.starttls.enable", "true");
         storeType = "imaps";
+    }
+
+    private void setDefaultPropPOP3(){
+        host = "pop.yandex.ru";
+        properties.put("mail.pop3.host", host);
+        properties.put("mail.pop3.port", "995");
+        properties.put("mail.pop3.starttls.enable", "true");
+        storeType = "pop3s";
     }
 
     private Store store;
