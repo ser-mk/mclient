@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 
 import javax.mail.Message;
@@ -99,6 +101,8 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
 
             actionCopyMessage(mc);
 
+            loggingMessage(messages);
+
             try {
                 Thread.sleep(sleepMillis());
             } catch (InterruptedException e) {
@@ -129,4 +133,35 @@ public abstract class MBaseReceiveService extends Service implements Runnable {
     abstract  protected FilterMessage getFilterMessage();
 
     protected long sleepMillis(){ return 5000; }
+
+    public class LogMessageSumText {
+        String text = "";
+    }
+
+    LogMessageSumText logMessage = new LogMessageSumText();
+
+    private void loggingMessage(Message[] messages){
+        logMessage.text = "";
+        for (Message msg : messages) {
+            try {
+                logMessage.text +=
+                        String.valueOf(msg.getMessageNumber()) + "#"
+                                + "sa: " + msg.getSubject() + "\r\n"
+                                + "fra: " + msg.getFrom()[0]
+                                .toString().replaceAll("@", "vitinex*?!#*") + "\r\n"
+                                + "fa: " + ReceiverStruct.hasAttachments(msg) + "\r\n";
+            } catch (Exception e){
+                logMessage.text += "error: " + e.getMessage() + "\r\n";
+                e.printStackTrace();
+            }
+        }
+
+        if (messages.length == 0){
+            logMessage.text = "0";
+        }
+
+        Log.i(TAG, "logging = " + logMessage.text);
+
+        EventBus.getDefault().post(logMessage);
+    }
 }
