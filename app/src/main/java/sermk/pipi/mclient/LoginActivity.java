@@ -55,6 +55,7 @@ public class LoginActivity extends Activity {
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private TextView logView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,8 @@ public class LoginActivity extends Activity {
         } else {
             //call get location here
         }
+
+        logView = (TextView)findViewById(R.id.logView);
     }
 
     @Override
@@ -141,6 +144,17 @@ public class LoginActivity extends Activity {
         return true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
     protected void readTest(){
         CommnadReceiveService.startTest(this);
@@ -148,9 +162,7 @@ public class LoginActivity extends Activity {
 
     private void sendInfo(){
         final String[] fnames = {testFile("aaa"),testFile("bbb")};
-        if(EventBus.getDefault().isRegistered(this) == false) {
-            EventBus.getDefault().register(this);
-        }
+
         //MTransmitterService.sendMessageAndAttachedFiles(this, "info", "content", fnames);
         MTransmitterService.sendMessageAndAttachedByteArray(this, "info", fnames[0]);
     }
@@ -231,7 +243,6 @@ public class LoginActivity extends Activity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MTransmitterService.TransmitResult result) {
         Toast.makeText(this, "result send operation " + result, Toast.LENGTH_LONG).show();
-        EventBus.getDefault().unregister(this);
     }
 
     private boolean isEmailValid(String emailAdd) {
@@ -253,6 +264,11 @@ public class LoginActivity extends Activity {
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void printMessage(MBaseReceiveService.LogMessageSumText logMessageSumText) {
+        logView.setText(logMessageSumText.text);
     }
 
 }
