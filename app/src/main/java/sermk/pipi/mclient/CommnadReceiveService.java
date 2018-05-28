@@ -193,7 +193,9 @@ public class CommnadReceiveService extends MBaseReceiveService {
 
     @Override
     protected long sleepMillis() {
-        //return super.sleepMillis();
+        if (BuildConfig.DEBUG) {
+            return 5000;
+        }
         return timeout_ms_sleep;
     }
 }
