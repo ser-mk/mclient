@@ -16,6 +16,7 @@ import javax.mail.Message;
 import eu.chainfire.libsuperuser.Shell;
 import sermk.pipi.pilib.ErrorCollector;
 import sermk.pipi.pilib.MClient;
+import sermk.pipi.pilib.NameFieldCollection;
 
 /**
  * Created by echormonov on 20.12.17.
@@ -139,7 +140,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
                                          final String packageName, final String receiverName,
                                          final String content,
                                          final String filename) {
-        Intent intent = new Intent(action);/*
+        Intent intent = new Intent(action);
         intent.putExtra(NameFieldCollection.FIELD_RECIVER_DATA_TEXT, content);
         if(!packageName.isEmpty() && !receiverName.isEmpty()){
             intent.setComponent(new ComponentName(packageName, receiverName));
@@ -150,7 +151,7 @@ public class CommnadReceiveService extends MBaseReceiveService {
             intent.putExtra(Intent.EXTRA_STREAM,
                     getUriFile(packageName, filename).toString());
         }
-*/
+
         sendBroadcast(intent);
         return true;
     }
