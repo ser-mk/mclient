@@ -11,9 +11,7 @@ public final class AuthSettings {
 
     static final public String[] MASTER_MAIL =
             new String[] {
-                    "master@pinects.com",
-                    "master1pibox@gmail.com",
-                    "master0pimaster@gmail.com"};
+                    "default_master@pinects_site.com"};
 
     static AuthSettings instance = null;
     private SharedPreferences mSettings;
