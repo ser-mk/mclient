@@ -15,11 +15,10 @@
         android:name=".MCApp"
         android:allowBackup="true"
         android:configChanges="orientation"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:persistent="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -27,6 +26,8 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
             <intent-filter>
+                <action android:name="android.intent.action.MAIN" /> 
+                <category android:name="android.intent.category.LAUNCHER" />  
                 <action android:name="android.intent.action.HUI" />
             </intent-filter>
         </activity>
